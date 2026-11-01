@@ -3,3 +3,9 @@ __pycache__/
 data/
 model/
 result.jpg
+node_modules/
+dist/
+.env
+*.pyc
+.test-tmp/
+.fixtures/
