@@ -254,5 +254,3 @@ class AdditionalValidation(unittest.TestCase):
         self.assertEqual(states[3].edge.committed_work_ms,400)
 
 if __name__=='__main__':unittest.main()
-
-

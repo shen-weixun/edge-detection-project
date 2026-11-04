@@ -1,12 +1,70 @@
-# SimPy audit progress
+# Codex 執行進度與恢復方式
 
-- Baseline commit: `f8ec3563aada7f574f9264da95314b9a599ee4ef`; initial working tree clean.
-- Read models, simulator, strategies, experiment, workload, clients, API, profiler, Laya service, tests, scripts, Compose and simulator UI.
-- Existing nine-run evidence copied without modification into `work/audit/before/`.
-- Confirmed P0: true work and face count exposed to policies; invisible work committed in upload; ablation component inconsistency.
-- Implementation and regression tests in progress. Docker Desktop was stopped; starting it for baseline/build/integration.
-- Do not delete volumes or datasets. Continue with `docker compose -f compose.yaml -f compose.ai.yaml up -d --build`, then unit and integration checks.
+## 完成狀態
 
-- Core implementation now separates DecisionTask, historical calibration, commitments/CPU/return phases, independent/shared serialized links, stage-boundary expiration and wall/charged decision time. RL event-stepped adapter added.
-- Baseline container: 28/28 tests passed. New suite reached 49 cases; corrected a hand-case deadline (171.6 ms completion must be tested against 171, not 175). Full precision results retained; old exact 600-ms assertion now uses 1e-8 floating tolerance.
-- First calibration seed 20261104 overlapped one test image and is excluded. Verified seed=100 against DB identities before starting independent calibration a057ded0f08c4837beff2ffd02f390ee. Original 30-image test Profile remains 6ddb0a187ba44065a5beaf0450ad259e.
+2026-11-04（Asia/Taipei）本次所有可執行階段已完成。網站與AI服務保持運行。
+
+|階段|結果|
+|---|---|
+|完整閱讀與架構報告|完成；models/simulator/strategies/experiment/workload/API/profiler/Laya/Compose/測試/腳本/前端及實測inference均核對|
+|修改前證據|原始Git版本三個P0問題實際重現；九格原始結果完整保留|
+|決策資訊權限|Realistic預設，獨立歷史校準；Oracle明示；六策略相同DecisionTask|
+|事件與時間驗證|單任務手算、三任務FCFS、非同步到達、重置、元件守恆通過|
+|狀態與佇列|承諾/上傳/CPU等待/執行/回傳分離；時間加權與決策時點統計分列|
+|網路與Deadline|獨立/共享全雙工序列瓶頸；complete_all/階段邊界drop均有測試|
+|公平性與RL|真實成本與消融分開；EpisodeSplit/State/Action/Reward/Next/Done/reset具備測試；無假DQN策略|
+|Docker/API/人臉功能|標準與AI覆寫建置成功；78項整合通過；真實偵測、同圖驗證、Laya推論成功|
+|九格重跑|原LFW30、3到達間隔×3Deadline×6策略；1620結果、270真實Laya決策|
+|全批次稽核|99項情境檢查通過；時間守恆最大誤差7.276e-12 ms；零fallback、零輸入截斷|
+|瀏覽器與交付|實測3任務五策略比較完成；修正快取資源混用；四報告與完整CSV/JSON交付|
+
+## Git
+
+- 分支 `feature/measured-workload-integration`；初始工作目錄乾淨，基準 `f8ec3563aada7f574f9264da95314b9a599ee4ef`。
+- `6a12688`：模擬器核心、資訊權限與49項測試。
+- `71f8647`：最終52項測試、RL資料分割、前端/API參數、健康檢查與可重現報表腳本。
+- 最後文件提交見 `git log -1`；只包含本任務報告、進度與測試檔案末尾空白修正。沒有破壞性Git操作，沒有更動其他組員的未提交工作。
+- 正式九格執行後只新增RL分割/驗證與前端資源版本，沒有再修改正式實驗使用的Simulator/策略/真實工作負載/Laya提示。
+
+## 實際證據
+
+- 最終52/52單元／事件／RL測試：`work/audit/unit-tests-final.txt`。
+- 78/78 API整合：`work/audit/integration/integration-results.json`與`integration-log.txt`。
+- 舊九格：`work/audit/before/`；原始另一份仍在此前交付目錄，未覆寫。
+- 新九格：本聊天`outputs/simpy-audit/after/`；完整比較在`work/audit/comparison/`並複製至交付目錄。
+- 消融18筆：`work/audit/real-six-policy-ablation.json`（包括3次真實Laya）。
+- 最終Docker映像建置及健康：`work/audit/build-final.txt`、`health-final.jsonl`。
+- 原始三P0重現：`work/audit/baseline-reproduction.json`與`baseline-source/`。
+- 原測試Profile `6ddb0a187ba44065a5beaf0450ad259e`；CSV SHA256 `1abfff4bfc55c487d7a6592b6a2a81e04accf38f5708073292e13ab4d6ec3ccc`。
+- 獨立校準Profile `a057ded0f08c4837beff2ffd02f390ee`，seed=100，30張/每張3次，與測試來源零重疊；CSV SHA256 `400f621f33fc2977fa198237f4447c88dd13e08360fbd71faecf04081879013b`；中位估計460.952837 ms。
+- 第一個新校準seed=20261104與測試重疊1張，因此拒絕用於正式實驗，該量測仍保留，沒有刪除資料。
+
+## 恢復與重現
+
+專案位於 `C:/Users/wubai/Documents/Codex/2026-11-02/https-github-com-shen-weixun-edge/work/edge-detection-project`。
+
+```powershell
+docker compose -f compose.yaml -f compose.ai.yaml up -d --build
+docker compose exec -T backend python -m unittest discover -s tests -v
+$env:WORKLOAD_PROFILE_ID='6ddb0a187ba44065a5beaf0450ad259e'
+$env:CALIBRATION_PROFILE_ID='a057ded0f08c4837beff2ffd02f390ee'
+python scripts/verify_integration.py --reuse-profiles
+# 若要新的一輪九格，指定新輸出目錄，不覆寫已交付證據：
+$env:EXPERIMENT_OUTPUT='work/audit/new-grid'
+python scripts/run_sensitivity.py
+# 對已存在的新九格重建比較表：
+python scripts/audit_results.py --before work/audit/before --after $env:EXPERIMENT_OUTPUT --audit profiles/laya_audit/decisions.jsonl --output work/audit/new-comparison
+```
+
+`audit_validation_report.py`由最終單元測試log與integration-results.json產生逐項報告。若新增測試，需同步維護預期結果表；不可直接沿用舊的PASS數。
+
+## 剩餘限制（不是本次未完成工作）
+
+- Edge/Cloud仍是假設相對算力及網路，沒有遠端硬體實測。
+- drop為非搶先階段邊界政策，不是到Deadline立即取消。
+- 歷史估計器是常數中位數，狀態監測假設即時；身份去重未檢查異路徑相同內容。
+- DQN/DDQN尚無有效權重或訓練結果；介面測試不能充當學習成效。
+- 九格為單次每格，wall-clock成本受主機負載影響；新舊模型定義不同，不可宣稱同條件演算法改善。
+- 瀏覽器已驗證一條實測比較流程，非所有瀏覽器尺寸/完整視覺回歸。
+
+禁止刪除volume、資料庫、模型快取或資料集；未執行down -v。
