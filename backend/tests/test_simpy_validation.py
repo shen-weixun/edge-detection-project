@@ -227,5 +227,32 @@ class AdditionalValidation(unittest.TestCase):
             self.assertEqual(LayaStrategy().select_node(DecisionTask.observe(task()),state),'edge')
         with self.assertRaises(TypeError):LayaStrategy().select_node(task(),state)
 
+
+    def test_shared_links_are_full_duplex_hand_calculation(self):
+        class Split:
+            def select_node(self,t,s):return ('edge','cloud')[t.task_id]
+        ts=[Task(0,.000001,0,2,0,1000,result_size_kb=1000),Task(1,1,0,2,30,1000)]
+        sim=Simulator(ts,Split(),NODES,False,network_mode='shared',shared_bandwidth_mbps=80)
+        rows=sim.run()
+        # A download 21.0001..121.0001 overlaps B upload 40..140.
+        self.assertAlmostEqual(rows[0]['completed_at_ms'],121.0001)
+        self.assertAlmostEqual(rows[1]['cpu_started_at_ms'],140)
+        self.assertIsNot(sim.nodes['edge'].upload.resource,sim.nodes['edge'].download.resource)
+        self.conserve(rows)
+
+    def test_stage_partition_excludes_return_from_cpu_work(self):
+        states=[]
+        class Spy:
+            def select_node(self,t,s):states.append(s);return 'edge'
+        Simulator([task(0),task(1,20),task(2,115),task(3,165)],Spy(),NODES,False).run()
+        self.assertEqual(states[2].edge.cpu_running,1)
+        self.assertEqual(states[2].edge.committed_count,1)
+        self.assertEqual(states[3].edge.returning_count,1)
+        self.assertEqual(states[3].edge.cpu_running,0)
+        self.assertEqual(states[3].edge.queue_work_ms,0)
+        self.assertEqual(states[3].edge.committed_count,2)
+        self.assertEqual(states[3].edge.committed_work_ms,400)
+
 if __name__=='__main__':unittest.main()
+
 

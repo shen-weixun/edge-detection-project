@@ -6,7 +6,7 @@ profiles=requests.get(base+'/profiles').json()
 p=next(x for x in profiles if x['dataset']=='lfw' and x['count']==30 and x['status']=='completed' and (not os.getenv('WORKLOAD_PROFILE_ID') or x['id']==os.getenv('WORKLOAD_PROFILE_ID')))
 print('PROFILE',p['id'],flush=True)
 nodes={'local':{'speed':1,'rtt_ms':0,'bandwidth_mbps':1000},'edge':{'speed':3,'rtt_ms':20,'bandwidth_mbps':120},'cloud':{'speed':8,'rtt_ms':100,'bandwidth_mbps':55}}
-common=dict(workload_mode='measured',profile_id=p['id'],count=30,seed=42,include_decision_overhead=True,nodes=nodes)
+common=dict(workload_mode='measured',profile_id=p['id'],count=30,seed=42,include_decision_overhead=True,nodes=nodes,information_mode='realistic',network_mode='independent',deadline_policy='complete_all',calibration_profile_id=os.environ['CALIBRATION_PROFILE_ID'])
 def run(body):
  r=requests.post(base+'/experiments',json=body,timeout=900);r.raise_for_status();return r.json()
 warm=run(dict(common,count=1,strategies=['laya'],deadline_ms=1000,interval_ms=1000))
@@ -28,5 +28,5 @@ for interval in [70,300,1000]:
   with (out/'summary.csv').open('w',newline='',encoding='utf-8-sig') as f:
    w=csv.DictWriter(f,fieldnames=list(rows[0]));w.writeheader();w.writerows(rows)
   s=result['strategies']['laya']['summary'];print('DONE',interval,deadline,s['placement'], 'decision',s['avg_decision_ms'],'latency',s['avg_latency_ms'],'deadline',s['deadline_met_rate'],flush=True)
-(out/'manifest.json').write_text(json.dumps(dict(profile=p,image_batch_sha256=imagehash,nodes=nodes,grid_runs=9,policies=6,tasks_per_policy=30,warmup_excluded=True),ensure_ascii=False,indent=2),encoding='utf-8')
+(out/'manifest.json').write_text(json.dumps(dict(profile=p,image_batch_sha256=imagehash,nodes=nodes,grid_runs=9,policies=6,tasks_per_policy=30,warmup_excluded=True,calibration_profile_id=common['calibration_profile_id'],information_mode='realistic',network_mode='independent',deadline_policy='complete_all'),ensure_ascii=False,indent=2),encoding='utf-8')
 print('GRID COMPLETE',flush=True)

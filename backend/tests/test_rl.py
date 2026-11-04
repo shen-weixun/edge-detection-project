@@ -30,3 +30,16 @@ class RLValidation(unittest.TestCase):
 
     def test_training_adapter_cannot_claim_decision_overhead(self):
         with self.assertRaises(ValueError):OffloadingEnv([],include_decision_overhead=True)
+
+    def test_training_test_episode_split(self):
+        from dataclasses import replace
+        from app.offloading.rl import EpisodeSplit
+        train=Task(0,1,1,100,0,1000,source_path='lfw/train.jpg',dataset='lfw')
+        test=replace(train,source_path='lfw/test.jpg')
+        split=EpisodeSplit((train,),(test,))
+        a=split.make_env('training');b=split.make_env('testing')
+        self.assertEqual(a.reset()[0].estimated_workload_ms,150)
+        self.assertEqual(b.reset()[0].estimated_workload_ms,150)
+        self.assertIsNot(a.sim.env,b.sim.env)
+        with self.assertRaises(ValueError):EpisodeSplit((train,),(train,))
+        with self.assertRaises(ValueError):split.make_env('invalid')

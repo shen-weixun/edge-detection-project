@@ -14,6 +14,11 @@ services:
       - laya_cache:/models
       - ./profiles/laya_audit:/audit
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8001/health')"]
+      interval: 15s
+      timeout: 5s
+      retries: 10
     # Accessible only to containers on the Compose network; no published host port.
 volumes:
   laya_cache:

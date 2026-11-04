@@ -5,8 +5,30 @@ their action. task_id in info provides delayed-credit attribution. An agent
 can use these rewards directly as a continuing semi-Markov episode.
 """
 from .simulator import Simulator
+from dataclasses import dataclass
 
 ACTIONS = ('local', 'edge', 'cloud')
+
+
+@dataclass(frozen=True)
+class EpisodeSplit:
+    """Explicit, identity-disjoint training/evaluation episodes."""
+    training: tuple
+    testing: tuple
+
+    def __post_init__(self):
+        for partition in (self.training, self.testing):
+            if not partition or any(not t.source_path for t in partition):
+                raise ValueError('Episode split requires nonempty source identities')
+        train_ids = {(t.dataset, t.source_path) for t in self.training}
+        test_ids = {(t.dataset, t.source_path) for t in self.testing}
+        if train_ids & test_ids:
+            raise ValueError('Training/test episode image overlap')
+
+    def make_env(self, partition, **config):
+        if partition not in ('training', 'testing'):
+            raise ValueError('Unknown episode partition')
+        return OffloadingEnv(getattr(self, partition), **config)
 
 
 class _Bridge:

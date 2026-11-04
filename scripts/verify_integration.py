@@ -1,7 +1,7 @@
-import requests,time,csv,io,json,hashlib,sys
+import requests,time,csv,io,json,hashlib,sys,os
 from pathlib import Path
 BASE='http://127.0.0.1:8080'
-out=Path(__file__).resolve().parents[1]/'work'/'verification';out.mkdir(parents=True,exist_ok=True)
+out=Path(__file__).resolve().parents[1]/'work'/'audit'/'integration';out.mkdir(parents=True,exist_ok=True)
 checks=[]
 def check(name,cond):
     assert cond,name
@@ -12,7 +12,7 @@ def post(p,b,timeout=600):
     r=requests.post(BASE+p,json=b,timeout=timeout);r.raise_for_status();return r.json()
 def profile(dataset,count):
     existing=get('/api/offloading/profiles') if '--reuse-profiles' in sys.argv else []
-    p=next((x for x in existing if x['dataset']==dataset and x['count']==count and x['status']=='completed' and x['succeeded']==count),None)
+    p=next((x for x in existing if x['dataset']==dataset and x['count']==count and x['status']=='completed' and x['succeeded']==count and (dataset!='lfw' or not os.getenv('WORKLOAD_PROFILE_ID') or x['id']==os.environ['WORKLOAD_PROFILE_ID'])),None)
     if p is None: p=post('/api/offloading/profiles',dict(dataset=dataset,count=count,seed=42,repeats=3))
     deadline=time.monotonic()+1800
     while p['status']=='running':
@@ -34,7 +34,7 @@ for body in [dict(dataset='invalid'),dict(dataset='lfw',repeats=2),dict(dataset=
     check('profile validation '+str(body),requests.post(BASE+'/api/offloading/profiles',json=body).status_code==422)
 p,rows=profile('lfw',30)
 w,wr=profile('wider_val',3)
-body=dict(workload_mode='measured',profile_id=p['id'],count=30,seed=42,include_decision_overhead=True)
+body=dict(workload_mode='measured',profile_id=p['id'],count=30,seed=42,include_decision_overhead=True,calibration_profile_id=os.environ['CALIBRATION_PROFILE_ID'])
 a=post('/api/offloading/experiments',body)
 check('CSV actually reaches SimPy',a['profile_source']=='measured_csv' and a['profile']['id']==p['id'])
 lookup={x['source_path']:x for x in rows}
@@ -46,16 +46,27 @@ b=post('/api/offloading/experiments',body)
 check('repeat experiment identical workload hash',a['workload_sha256']==b['workload_sha256'])
 s=post('/api/offloading/experiments',dict(workload_mode='synthetic',count=3))
 check('explicit synthetic label',s['profile_source']=='synthetic_demo_NOT_measured' and s['profile'] is None)
-v=post('/api/offloading/experiments',dict(workload_mode='measured',profile_id=w['id'],count=3))
+v=post('/api/offloading/experiments',dict(workload_mode='measured',profile_id=w['id'],count=3,calibration_profile_id=os.environ['CALIBRATION_PROFILE_ID']))
 check('WIDER real profile reaches SimPy',all(t['dataset']=='wider_val' for t in v['workload']))
 sample=next(x['sample_id'] for x in rows if int(x['face_count'])==1)
 r=requests.post(BASE+f'/api/samples/{sample}/detect',timeout=300);r.raise_for_status();check('homepage real sample detection',r.json()['execution_mode']=='local_baseline')
 image=requests.get(BASE+f'/api/samples/{sample}/image').content
 r=requests.post(BASE+'/api/verify',files={'first':('a.jpg',image,'image/jpeg'),'second':('b.jpg',image,'image/jpeg')},timeout=300)
 check('homepage real same-image verification',r.status_code==200 and r.json()['match'])
-laya=post('/api/offloading/experiments',dict(workload_mode='measured',profile_id=p['id'],strategies=['laya'],count=1,deadline_ms=1))
+laya=post('/api/offloading/experiments',dict(workload_mode='measured',profile_id=p['id'],strategies=['laya'],count=1,deadline_ms=1,calibration_profile_id=os.environ['CALIBRATION_PROFILE_ID']))
 t=laya['strategies']['laya']['tasks'][0]
 check('real Laya model decision',t['selected_node'] in ['local','edge','cloud'] and t['decision_model'] is not None)
 check('Laya decision deadline miss reflected',not t['deadline_met'] and t['decision_ms']>1)
+for network in ['independent','shared']:
+ for policy in ['complete_all','drop_if_expired']:
+  x=post('/api/offloading/experiments',dict(body,count=3,network_mode=network,deadline_policy=policy,deadline_ms=1))
+  check('API modes '+network+'/'+policy, x['config']['network_mode']==network and x['config']['deadline_policy']==policy)
+  for result in x['strategies'].values():
+   check('API conservation '+network+'/'+policy,all(abs(t['total_latency_ms']-sum(t[k] for k in ['network_ms','queue_ms','compute_ms','decision_ms','decision_queue_ms']))<1e-7 for t in result['tasks']))
+   check('API completion/drop accounting '+network+'/'+policy,result['summary']['completed_count']+result['summary']['dropped_count']==3)
+for extra in [dict(calibration_profile_id=None),dict(calibration_profile_id=p['id']),dict(network_mode='invalid'),dict(deadline_policy='invalid')]:
+ check('API rejects invalid calibration/config '+str(extra),requests.post(BASE+'/api/offloading/experiments',json=dict(body,**extra)).status_code==422)
+abl=post('/api/offloading/experiments',dict(body,count=2,include_decision_overhead=False))
+check('API ablation labelled',abl['comparison_scope']=='selection_quality_ablation' and all(t['decision_ms']==0 for v in abl['strategies'].values() for t in v['tasks']))
 (out/'integration-results.json').write_text(json.dumps(dict(passed=len(checks),failed=0,checks=checks,profiles=[p,w],measured_experiment=a,laya_experiment=laya),ensure_ascii=False,indent=2),encoding='utf-8')
 print('TOTAL',len(checks),'PASSED',flush=True)
