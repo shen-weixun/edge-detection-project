@@ -1,3 +1,40 @@
+# 論文啟發改善：本輪已完成（2026-11-04，Asia/Taipei）
+
+- 起點9739b39，初始Git乾淨；實作階段commit f312837。五份本輪報告已生成，原驗收文件/實驗不覆寫。
+- 完成Phase 1–5：真實量測LFW60+WIDER60（每圖預熱+3正式）；各36/12/12訓練/驗證/測試，內容SHA256跨分割重複0。7個候選只用validation選log-ridge α10；24張test固定不重選。
+- 新估計器相對Median：LFW MAE36.104→40.423ms；WIDER598.201→536.625ms。成對bootstrap兩組CI均跨0，沒有全面改善證據，保留Median預設。跨資料集轉移誤差完整揭露。
+- 九個受控情境51筆結果保存。CPU/傳輸重疊案例406.28→381.70ms；6000ms未知重工作量兩版皆失敗，Oracle另列。
+- 已完成192個API實驗格/894策略結果/5364筆任務；兩資料集、3種子、3負載、3環境。真實成本正式比較、預估器隔離、Oracle與成本消融分開。36條件格V2相對原版平均延遲差超過1ms：5改善、9退步、22差小於1ms；所有逐格結果保留，沒有混合排名。
+- Laya90次診斷（另2次預熱）+504次矩陣原始決策均留存；原版45次診斷12正確、V2 21正確，排列36次8→18正確，但Edge/Cloud排列不變性均失敗。單因素4/9→3/9，平均HTTP成本1095.8→1729.4ms。V2可靠性FAIL，僅探索版本，不再調prompt，不使用規則冒充AI。
+- 最終通過77/77後端單元（含原64、RL三案例）、2/2服務單元、78/78原HTTP整合、17/17新增API。5364任務時間守恆/真實compute不變/CPU區間容量、504 raw choice與HTTP選擇及DTO逐筆連結均通過。Docker完整建置成功，backend/db/laya healthy、frontend running，JS語法通過。
+- RL相關四檔simulator.py/models.py/rl.py/test_rl.py SHA256與起點完全相同。沒有修改DQN/DDQN、介面或權重。之前outputs兩份證據包共131個雜湊檔核對未變。沒有清除資料集、DB、模型或volume。
+- 實驗腳本曾因探索性消融與原消融同檔名觸發assert停下，未覆寫舊資料；已改獨立scope=exploratory_ablation續跑，192格完整。
+- 限制：A/B原文實讀並核對公式；C只能取得索引方法段、全文403；D只有摘要。所有實作為paper-inspired。小樣本/單host/簡化固定網路與聚合ledger限制見五報告。瀏覽器控制不可用，未執行視覺/點擊驗收；HTTP網站、人臉辨識及真實API已通過。
+- 可執行階段無剩餘待辦。未達成的研究主張：Laya可靠數值決策、新估計器全面提升、V2普遍優勢；已如實報告，不以更多test調參掩蓋。
+
+## 本輪檔案與重現
+
+新增estimators.py、latency_v2.py、test_paper_improvements.py、paper_cases.py；擴充experiment.py/strategies.py/laya_client.py/api.py與Laya服務、前端可選入口；五個scripts提供訓練、受控、真實模型診斷、矩陣、報告，verify_paper_api.py補向後相容檢查。完整清單見git diff 9739b39..HEAD --stat。
+
+```powershell
+docker compose -f compose.yaml -f compose.ai.yaml up -d --build
+docker compose exec -T backend python -m unittest discover -s tests -v
+docker compose -f compose.yaml -f compose.ai.yaml exec -T laya python -m unittest test_server -v
+$env:WORKLOAD_PROFILE_ID='6ddb0a187ba44065a5beaf0450ad259e'
+$env:CALIBRATION_PROFILE_ID='a057ded0f08c4837beff2ffd02f390ee'
+$env:INTEGRATION_OUTPUT=(Join-Path (Get-Location) 'work/paper-improvements/api-integration')
+python scripts/verify_integration.py --reuse-profiles
+python scripts/verify_paper_api.py
+python scripts/run_paper_comparison.py
+python scripts/build_paper_reports.py
+```
+
+模型重訓/受控/診斷指令見TEAM_INTEGRATION_NOTES.md；已完成格會從JSON重讀並驗證frozen配置，不會偷換結果。要重做實驗應先另存舊資料、使用新輸出目錄。work/paper-improvements/results有模型、分割、預測與90次診斷；matrix/保存192格原始API JSON，matrix-summary/aggregate.csv為逐seed/彙整，matrix-laya-audit.jsonl為504個真實worker輸出。完整測試log與Docker建置/健康log同目錄保存。
+
+---
+
+# 本輪執行時階段紀錄（歷史，以上方完成狀態為準）
+
 # 論文啟發改善進行中（2026-11-04）
 
 - 起點9739b39，初始Git乾淨。禁止修改DQN/DDQN與RL介面；simulator.py/models.py/rl.py/test_rl.py SHA256已保存work/paper-improvements/protected-baseline.json。
