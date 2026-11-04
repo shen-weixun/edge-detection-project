@@ -1,10 +1,55 @@
+# 正式實驗本輪已完成（2026-11-04，Asia/Taipei）
+
+- 起點8a80cc5。階段提交：4ef5e10（metadata群組分割/情境登錄）、721cede（正式估計器與相容介面）。後續正式比較/報告提交見本檔後續封存紀錄與delivery-manifest.json。
+- Phase1：320/320真實成功圖；LFW與WIDER各40 training、20 validation、100新test。train/val重用107張有效三次量測，新213張預熱+3正式共852次InsightFace呼叫。逐圖原始時間/中位數/人臉數/設備版本/失敗欄保存，無合成推論時間。新test200圖與242張歷史已測圖片的SHA256交集0。
+- 分割seed20261104；LFW人物群組40/20/100、WIDER事件群組20/11/16，跨角色group/path/hash0重疊；320圖64bit dHash距離均>4。WIDER人物/所有語意近重複不能完全驗證，已說明。
+- 時序：資料split在新增推論前凍結；情境矩陣在量測進行中、模型選擇/策略評估前凍結，不宣稱矩陣早於所有圖片推論。選圖/情境不使用新test結果挑勝者。
+- Phase2：80 training擬合7候選，只以40 validation MAE選log-Ridge α10；test每資料集100。Median MAE：LFW74.749、WIDER626.352ms；Ridge79.169、690.737ms。差+4.420（cluster95CI[1.788,7.230]）、+64.385（CI[-72.006,217.058]）ms。Ridge RMSE/Bias點較好但MAE未改善，保留Median預設。所有候選、P50/P95、困難子群、跨資料集、scatter圖、模型JSON與checksum保留。
+- Phase3：432固定格（2資料集×8環境×3間隔×3 Deadline×3 seeds），每格全部100圖；六Median策略+兩Ridge策略=3456 run/345600任務。三種比較(policy/estimator/combined)分開，432筆配對條件與CI。V2+Median對V1+Median144條件：24改善>1ms、30退步>1ms、90差<=1ms，條件數不是獨立證據，也不跨情境混排名。
+- 最大點估計退化WIDER/Local有利/70ms/Deadline500：V2平均+1324.455ms，三seed CI[-1743.430,4392.340]跨零。CPU等待+1026.027ms、網路+278.114ms。額外6次100圖零成本事件重建，首次相同state下V1選Local/V2選Edge，原始states/costs/全trace保留，未修改V2或正式結果。
+- 獨立FCFS：12次100圖原/共享網路V1/V2/Edge run +6次案例run，共1800任務；最大誤差7.276e-12ms。另12次確定性重播一致。正式345600筆time conservation/真值compute/CPU容量/任務唯一/相同truth/DTO隔離全部通過。
+- Phase4：本輪Laya新推論0。90固定真實診斷+144歷史成本任務重新核對raw choice完全一致、無fallback；原版12/45、V2 21/45最低共同估計成本選擇正確，兩者仍FAIL數值/排列可靠性。歷史CPU決策均值1095.8/1729.4ms及實測排隊/成本消融分開保存，不偽稱本輪100圖測試，也沒有免費Replay冒充真實推論。
+- Phase5：新增獨立integration_contract.py：49可觀測特徵、0/1/2動作、外部policy使用同Simulator/metrics、三分割群組/hash guard。原RL/核心/Baseline/V1/V2/估計器/Laya10個檔逐位元組未改。實際DQN/DDQN模型與HTTP key註冊仍NOT VERIFIED/未支援，介面問題與適配範例在TEAM_INTEGRATION_CONTRACT.md，不修改組員程式。
+- 完整重建後85/85後端（原77+8介面）、2/2 Laya服務mock、109/109 HTTP回歸通過；包括新100圖Profile/CSV三次中位數/校驗、舊calibration/default5、隔離guard、網路/丟棄模式與網站真實辨識。Laya新增模型呼叫0。Docker backend/db/laya healthy、frontend running，JS語法PASS。瀏覽器視覺點擊NOT VERIFIED。
+- 先前三份證據包402個檔雜湊核對未變；沒有刪除/覆寫舊實驗、DB、資料、模型/volume。五報告、全部CSV/raw JSON.gz/圖表與logs於本輪outputs/formal-evaluation。
+- 可執行工作已完成。可用作宣告模型假設下的正式課堂證據；不支持實際遠端平台速度、Laya可靠數值決策、未測DQN成績或全面Ridge/V2勝出。後續只在提供真實組員模型/外部硬體時再做相應驗證，不需重測有效資料。
+
+## 本輪恢復與重現
+
+逐圖checkpoint與全部正式輸出持久化在原專案profiles/formal-evaluation/；源腳本scripts/formal_*.py與verify_formal_api.py。重跑會驗證/重用plan、fit-complete與raw格，不能依test重選候選或把不同版本混在舊目錄。全新研究設計需另立版本目錄並事前凍結。
+
+```powershell
+docker compose -f compose.yaml -f compose.ai.yaml up -d --build
+docker compose exec -T backend python -m unittest discover -s tests -v
+docker compose -f compose.yaml -f compose.ai.yaml exec -T laya python -m unittest test_server -v
+docker compose exec -T backend mkdir -p /app/scripts
+Get-ChildItem scripts/formal_*.py | ForEach-Object { docker compose cp $_.FullName ('backend:/app/scripts/'+$_.Name) }
+docker compose exec -T backend python /app/scripts/formal_dataset.py
+python scripts/formal_design.py --output work/formal-evaluation
+python scripts/formal_laya.py
+docker compose cp work/formal-evaluation/laya backend:/profiles/formal-evaluation/laya
+docker compose exec -T backend python /app/scripts/formal_evaluate.py
+docker compose exec -T backend python /app/scripts/formal_reports.py
+docker compose exec -T backend python /app/scripts/formal_case_study.py
+docker compose exec -T backend python /app/scripts/formal_contract_export.py
+python scripts/verify_formal_api.py
+# 先保存/匯入work/formal-evaluation/tests真實test-summary及logs，再重建最終報告
+docker compose exec -T backend python /app/scripts/formal_reports.py
+```
+
+test-summary需依實際執行log生成，不得只複製PASS文字。完整驗證數據見tests/、evaluation/independent-validation.json及regression-case-study.json。原團隊接口規格/待支援項見TEAM_INTEGRATION_CONTRACT.md。
+
+---
+
+# 本輪階段紀錄（歷史，以上方完成狀態為準）
+
 # 正式資料與組員整合：本輪進行中（2026-11-04）
 
 - 起點8a80cc5，Git乾淨；既有核心、V1/Baseline、RL與兩個Laya版本凍結，10個原始檔雜湊保存在work/formal-evaluation/protected-baseline.json。
 - 已讀前輪驗收與原始碼；資料庫LFW13233、WIDER_train12880、WIDER_val3226，足夠實測。
 - 新分割seed20261104，LFW人物與WIDER事件資料夾互斥。每資料集40 training/20 validation/100 testing，320圖片內容SHA256與64bit dHash距離<=4去重，選圖不看推論時間；test排除全部已註冊歷史量測圖片。本次dHash排除0。完整plan在/profiles/formal-evaluation/plan.json與host work/formal-evaluation/plan.json，凍結後不依結果換圖。
 - 訓練/驗證重用107張相同buffalo_l/CPU/三次正式實測（CSV校驗有效）；其餘213張預熱+3次正式，預計852次InsightFace呼叫。逐圖片持久化/profiles/formal-evaluation/measurements，可續跑；不重測有效資料。
-- 正式矩陣已在任何新test推論與策略評估前固定：8環境×3間隔70/300/1000×3 deadline500/1000/2000×3 seeds11/23/37×2資料集=432情境格，每格100圖全部使用，只改順序。六個Median策略+兩個Ridge策略，共3456策略run/345600任務結果。raw/log ridge α候選0.1/1/10，只用validation MAE選；三因素比較分開。
+- 正式矩陣於資料量測進行中、模型選擇及策略評估前固定：8環境×3間隔70/300/1000×3 deadline500/1000/2000×3 seeds11/23/37×2資料集=432情境格，每格100圖全部使用，只改順序。六個Median策略+兩個Ridge策略，共3456策略run/345600任務結果。raw/log ridge α候選0.1/1/10，只用validation MAE選；三因素比較分開。
 - Laya原版/V2均不再調參，本輪新增模型決策預算0。重用90次固定可靠性診斷與已存端到端/消融原始紀錄，重新核對raw choice，不將舊資料偽稱新100圖實驗。不作大型Laya矩陣。
 - 新增共用integration_contract.py僅為可觀測49特徵/0,1,2動作/外部policy呼叫與三分割guard，沒有更改組員RL；新增8項相容測試待資料量測後統一驗證。
 - Phase1/2已完成：320/320成功，所有原始三次與中位數核對；正式test200圖均新測。群組：LFW train/val/test=40/20/100；WIDER=20/11/16事件群組，跨角色0重疊。Validation選log-Ridge α10；test MAE差Ridge−Median LFW+4.420ms，cluster95CI[1.788,7.230]；WIDER+64.385ms，CI[-72.006,217.058]。Median保留。模型JSON/checksum/所有7候選與跨資料集/子群保留。
