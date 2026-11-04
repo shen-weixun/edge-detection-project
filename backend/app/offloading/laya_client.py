@@ -23,6 +23,8 @@ class LayaStrategy:
             "task": asdict(task),
             "nodes": [vars(n) for n in state.nodes()],
         }
+        if getattr(self, 'variant', 'legacy') != 'legacy':
+            data['variant'] = self.variant
         payload = json.dumps(data, allow_nan=False).encode("utf-8")
         request = Request(self.endpoint, data=payload,
                           headers={"Content-Type": "application/json"}, method="POST")
@@ -38,3 +40,8 @@ class LayaStrategy:
         self.last_model = result.get('model')
         self.last_audit_id = result.get('audit_id')
         return node
+
+
+class LayaV2Strategy(LayaStrategy):
+    """Neutral compact representation; the returned choice is still the real model's."""
+    variant = 'v2'

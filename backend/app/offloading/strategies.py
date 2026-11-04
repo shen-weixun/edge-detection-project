@@ -46,10 +46,13 @@ class LatencyAwareStrategy:
         return min(state.nodes(), key=lambda node: estimate_latency(task, node)).name
 
 
+from .latency_v2 import LatencyAwareV2Strategy
+
 STRATEGY_FACTORIES = {
     "local_only": lambda: FixedStrategy("local"),
     "edge_only": lambda: FixedStrategy("edge"),
     "cloud_only": lambda: FixedStrategy("cloud"),
     "load_threshold": LoadThresholdStrategy,
     "latency_aware": LatencyAwareStrategy,
+    "latency_aware_v2": LatencyAwareV2Strategy,
 }

@@ -7,6 +7,7 @@ from typing import Literal
 from pydantic import BaseModel, Field
 from .experiment import experiment
 from .models import NodeConfig
+from .estimators import load_registered, model_root
 from .workload import load_profile
 from . import profiles
 
@@ -32,6 +33,7 @@ class ExperimentRequest(BaseModel):
     shared_bandwidth_mbps: float = Field(default=120, gt=0, le=100000)
     deadline_policy: Literal["complete_all", "drop_if_expired"] = "complete_all"
     calibration_profile_id: str | None = None
+    estimator_id: str | None = None
     use_measured_profile: bool = False
     workload_mode: Literal['measured', 'synthetic'] | None = None
     profile_id: str | None = None
@@ -44,7 +46,7 @@ def offloading_status():
     return {
         "simulation": "SimPy - independent from physical image inference",
         "available_strategies": ["local_only", "edge_only", "cloud_only",
-                                 "load_threshold", "latency_aware", "laya"],
+                                 "load_threshold", "latency_aware", "latency_aware_v2", "laya", "laya_v2"],
         "not_implemented": ["dqn", "ddqn"],
         "measured_profile_available": any(p['status']=='completed' for p in profiles.listing()),
         "laya_service": "optional; docker compose -f compose.yaml -f compose.ai.yaml up -d --build",
@@ -55,9 +57,9 @@ def offloading_status():
 def run_experiment(request: ExperimentRequest):
     if not request.strategies:
         raise HTTPException(status_code=422, detail="Choose at least one strategy")
-    if len(request.strategies) > 6:
+    if len(request.strategies) > 8:
         raise HTTPException(status_code=422, detail="Too many strategies")
-    if "laya" in request.strategies and request.count > 50:
+    if {"laya", "laya_v2"}.intersection(request.strategies) and request.count > 50:
         raise HTTPException(status_code=422, detail="Laya is limited to 50 tasks per request")
     if request.nodes is not None and set(request.nodes) != {"local", "edge", "cloud"}:
         raise HTTPException(status_code=422, detail="nodes must contain exactly local, edge, cloud")
@@ -77,15 +79,19 @@ def run_experiment(request: ExperimentRequest):
         calibration_meta = None
         if request.calibration_profile_id:
             calibration_meta, calibration = profiles.load(request.calibration_profile_id)
+        model = load_registered(request.estimator_id) if request.estimator_id else None
+        if model and request.calibration_profile_id:
+            raise ValueError('Choose saved estimator OR calibration Profile, not both')
         result = experiment(strategies=request.strategies,
                           count=request.count, interval_ms=request.interval_ms,
                           seed=request.seed, deadline_ms=request.deadline_ms,
                           include_decision_overhead=request.include_decision_overhead,
-                          profile=profile, calibration_profile=calibration,
+                          profile=profile, calibration_profile=calibration, estimator_model=model,
                           information_mode=request.information_mode, network_mode=request.network_mode,
                           shared_bandwidth_mbps=request.shared_bandwidth_mbps, deadline_policy=request.deadline_policy,
                           nodes={k: NodeConfig(**v.model_dump()) for k, v in request.nodes.items()}
                           if request.nodes else None)
+        result['estimator_id'] = request.estimator_id
         result['profile'] = meta
         result['calibration_profile'] = calibration_meta
         return result
@@ -127,3 +133,13 @@ def profile_csv(identifier: str):
     if not path.is_file():
         raise HTTPException(404, 'CSV 尚未產生')
     return FileResponse(path, media_type='text/csv', filename=identifier+'.csv')
+
+
+@router.get('/estimators')
+def list_estimators():
+    result = []
+    for path in sorted(model_root().glob('*.json')):
+        model = load_registered(path.stem)
+        result.append(dict(id=path.stem, kind=model.kind, ridge_alpha=model.ridge_alpha,
+                           training_count=len(model.training_identities), validation_count=len(model.validation_identities)))
+    return result

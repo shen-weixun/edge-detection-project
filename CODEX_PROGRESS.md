@@ -1,3 +1,18 @@
+# 論文啟發改善進行中（2026-11-04）
+
+- 起點9739b39，初始Git乾淨。禁止修改DQN/DDQN與RL介面；simulator.py/models.py/rl.py/test_rl.py SHA256已保存work/paper-improvements/protected-baseline.json。
+- 舊64項測試基準通過；加入新預估器與策略/API後64項仍通過。
+- 原文：A PDF已讀§2.1/2.2 Eq1-2與§3.1；B PDF已讀§III Eq2-13/Algorithm1；C取得原出版社可搜尋§5.1/5.2內容，直接全文連線403，作者稿封存至2027；D僅取得出版社摘要，未取得全文。未宣稱完全重現。
+- 新增estimators.py（Median、3個預先定義特徵之raw/log ridge、JSON保存/校驗/分割guard）、latency_v2.py（時間維度與階段重疊估計、deadline/slack/load解釋）、LayaV2Strategy與服務variant=v2（中立緊湊輸入、不排序、不代改輸出、同multilingual checkpoint、單CPU thread並還原legacy設定）。原版策略/預估器預設保留。
+- 正在以seed271828量測LFW60與WIDER_train60，各3次正式推論+預熱；完成後按固定種子做36/12/12 train/validation/test分割，不以test挑模型。量測紀錄work/paper-improvements/measurement-jobs.json。
+- 已完成：LFW/WIDER各60張真實3次量測，固定36/12/12分割、內容SHA256去重；ridge_log α=10僅以validation MAE選定。已保存所有7個候選及誤差/分布/paired-bootstrap 95%CI，註冊模型107e734e...（Median）與49861dc7...（ridge_log）。測試Profile LFW=efd4b190bb52a39666b3616c3df22927、WIDER=03a2cb08e86b52b710d32a839effbc8b。
+- 已完成9個受控情境、51筆v1/v2/Oracle結果；新12項後端單元+2項Laya服務單元通過，原64無退步。另加1項預測成本計入現有policy timer測試，需最後全量重跑（預期77後端+2服務）。
+- Laya唯一凍結V2：原版45診斷12正確、V2 45診斷21正確；排列情境8/36→18/36，但V2只有Local排列不變、B/C仍失敗，單因素4/9→3/9且wall平均1095.8→1729.4ms。凍結，不再以test追調prompt。V2不納入可靠正式排名，只做小型探索性對照。
+- 下一步固定矩陣：兩資料集、seed11/23/37、到達間隔10000/200/25ms、deadline1000、3環境（原參數、共享且受限網路、倍增遠端算力），每trial6個held-out圖片。Median下7策略54格正式端到端；feature下6個非AI策略54格隔離估計器效果；Oracle54格另列；原環境18格Median決策成本消融；LayaV2僅兩資料集/三負載/seed11原環境做正式/消融探索性6+6格。所有圖像與設定按cell一致，保存全部不利結果。不更動模型與分割。
+- 診斷與訓練結果已複製至work/paper-improvements/results，重建容器前必須先cp /tmp/paper-improvements。
+
+---
+
 # 本輪最終驗收更新（2026-11-04，Asia/Taipei）
 
 - 本輪驗收起點 `0ef365b`，初始工作目錄乾淨；之前四報告、九格實驗與資料皆保留。

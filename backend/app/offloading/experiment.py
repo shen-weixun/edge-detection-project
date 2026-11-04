@@ -7,7 +7,9 @@ import json
 from .simulator import Simulator, DEFAULT_NODES
 from dataclasses import asdict
 from .strategies import STRATEGY_FACTORIES
-from .laya_client import LayaStrategy
+from .laya_client import LayaStrategy, LayaV2Strategy
+from .estimators import EstimatedPolicy
+from time import perf_counter
 from .workload import generate_tasks, calibration_estimate
 from dataclasses import replace
 
@@ -40,22 +42,33 @@ def experiment(strategies=None, count=30, interval_ms=70.0, seed=42,
                deadline_ms=500.0, profile=None, include_decision_overhead=True,
                nodes=None, calibration_profile=None, information_mode="realistic",
                network_mode="independent", shared_bandwidth_mbps=120.0,
-               deadline_policy="complete_all"):
+               deadline_policy="complete_all", estimator_model=None):
     names = strategies or ["local_only", "edge_only", "cloud_only",
                            "load_threshold", "latency_aware"]
     if len(names) != len(set(names)):
         raise ValueError("strategy names must be unique")
-    unknown = set(names) - set(STRATEGY_FACTORIES) - {"laya"}
+    unknown = set(names) - set(STRATEGY_FACTORIES) - {"laya", "laya_v2"}
     if unknown:
         raise ValueError(f"Strategies not implemented: {sorted(unknown)}")
     tasks = generate_tasks(count, interval_ms, seed, deadline_ms, profile)
     estimate = 150.0
-    if information_mode == "realistic" and profile is not None:
-        estimate = calibration_estimate(calibration_profile, profile)
-    tasks = [replace(t, estimated_workload_ms=estimate) for t in tasks]
+    prediction_started = perf_counter()
+    if estimator_model is not None:
+        if information_mode != 'realistic' or profile is None:
+            raise ValueError('Saved estimators require realistic measured mode')
+        estimator_model.validate_test(profile)
+        tasks = [replace(t, estimated_workload_ms=estimator_model.predict(t)) for t in tasks]
+        estimate = None
+    else:
+        if information_mode == "realistic" and profile is not None:
+            estimate = calibration_estimate(calibration_profile, profile)
+        tasks = [replace(t, estimated_workload_ms=estimate) for t in tasks]
+    prediction_wall_ms = (perf_counter()-prediction_started)*1000
     output = {}
     for name in names:
-        policy = LayaStrategy() if name == "laya" else STRATEGY_FACTORIES[name]()
+        policy = (LayaStrategy() if name == "laya" else LayaV2Strategy()) if name in ("laya", "laya_v2") else STRATEGY_FACTORIES[name]()
+        if estimator_model is not None:
+            policy = EstimatedPolicy(policy, estimator_model)
         sim = Simulator(tasks, policy, nodes or DEFAULT_NODES,
                         include_decision_overhead, information_mode, network_mode,
                         shared_bandwidth_mbps, deadline_policy)
@@ -71,7 +84,10 @@ def experiment(strategies=None, count=30, interval_ms=70.0, seed=42,
             "decision_overhead_in_latency": include_decision_overhead,
             "model_version": "audit-v2",
             "information_mode": information_mode,
-            "estimator": {"kind": "disjoint_historical_median" if calibration_profile else "synthetic_prior",
+            "estimator": {"kind": "oracle_actual_workload" if information_mode == "oracle" else (estimator_model.kind if estimator_model else ("disjoint_historical_median" if calibration_profile else "synthetic_prior")),
+                          "prediction_wall_ms": prediction_wall_ms,
+                          "prediction_in_decision_cost": estimator_model is not None,
+                          "saved_model": estimator_model.to_dict() if estimator_model else None,
                           "estimate_ms": estimate,
                           "training_identities": sorted((r["dataset"], r["source_path"]) for r in (calibration_profile or []))},
             "comparison_scope": "end_to_end" if include_decision_overhead else "selection_quality_ablation",
