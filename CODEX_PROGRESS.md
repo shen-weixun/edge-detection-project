@@ -7,7 +7,9 @@
 - 正式矩陣已在任何新test推論與策略評估前固定：8環境×3間隔70/300/1000×3 deadline500/1000/2000×3 seeds11/23/37×2資料集=432情境格，每格100圖全部使用，只改順序。六個Median策略+兩個Ridge策略，共3456策略run/345600任務結果。raw/log ridge α候選0.1/1/10，只用validation MAE選；三因素比較分開。
 - Laya原版/V2均不再調參，本輪新增模型決策預算0。重用90次固定可靠性診斷與已存端到端/消融原始紀錄，重新核對raw choice，不將舊資料偽稱新100圖實驗。不作大型Laya矩陣。
 - 新增共用integration_contract.py僅為可觀測49特徵/0,1,2動作/外部policy呼叫與三分割guard，沒有更改組員RL；新增8項相容測試待資料量測後統一驗證。
-- 下一步：完成量測→檢查完整性與分割→訓練驗證選模→固定test評估及分群CI→432格策略比較→Laya既有證據稽核→完整回歸、五報告與outputs/formal-evaluation封存。
+- Phase1/2已完成：320/320成功，所有原始三次與中位數核對；正式test200圖均新測。群組：LFW train/val/test=40/20/100；WIDER=20/11/16事件群組，跨角色0重疊。Validation選log-Ridge α10；test MAE差Ridge−Median LFW+4.420ms，cluster95CI[1.788,7.230]；WIDER+64.385ms，CI[-72.006,217.058]。Median保留。模型JSON/checksum/所有7候選與跨資料集/子群保留。
+- Phase4證據重用稽核已完成：90真實診斷+144歷史成本任務raw選擇一致、無fallback，本輪新Laya模型呼叫0，不冒充本輪100圖比較。
+- 新介面8項+原77項全部85/85通過。矩陣進行中，下一步完成432格→獨立FCFS/確定性重播→API/Docker回歸→五報告與outputs/formal-evaluation封存。
 
 恢復：docker compose exec -T backend python /app/scripts/formal_dataset.py（自動略過已持久化圖片）。不要重建容器前丟失/app/scripts；源腳本已存scripts/formal_dataset.py，可重新docker compose cp。/profiles持久化不會被重建清除。
 
