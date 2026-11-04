@@ -1,7 +1,7 @@
 import requests,time,csv,io,json,hashlib,sys,os
 from pathlib import Path
 BASE='http://127.0.0.1:8080'
-out=Path(__file__).resolve().parents[1]/'work'/'audit'/'integration';out.mkdir(parents=True,exist_ok=True)
+out=Path(os.getenv('INTEGRATION_OUTPUT', str(Path(__file__).resolve().parents[1]/'work'/'audit'/'integration')));out.mkdir(parents=True,exist_ok=True)
 checks=[]
 def check(name,cond):
     assert cond,name

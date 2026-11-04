@@ -40,7 +40,6 @@ class _Node:
             self.jobs.pop(task_id, None)
         else:
             self.jobs[task_id] = dict(stage=stage, estimate=estimate, since=now)
-        self.max_queue = max(self.max_queue, sum(j['stage'] == 'cpu_wait' for j in self.jobs.values()))
 
     def state(self, name, now):
         jobs = list(self.jobs.values())
@@ -49,10 +48,10 @@ class _Node:
                        if j['stage']=='cpu_run' else j['estimate']
                        for j in jobs if j['stage'] in ('cpu_wait', 'cpu_run'))
         committed = [j for j in jobs if j['stage'] in ('committed', 'upload')]
-        return NodeState(name, self.cfg.speed, count('cpu_wait'), cpu_work,
+        return NodeState(name, self.cfg.speed, len(self.cpu.queue), cpu_work,
                          self.cfg.rtt_ms, self.cfg.bandwidth_mbps,
                          self.upload.backlog(now), self.download.backlog(now), True,
-                         count('cpu_run'), len(committed), count('upload'), count('return'),
+                         self.cpu.count, len(committed), count('upload'), count('return'),
                          sum(j['estimate'] for j in committed), now)
 
 
@@ -174,6 +173,8 @@ class Simulator:
         self._stage(task, selected, 'cpu_wait', estimate)
         before = self.env.now
         with node.cpu.request() as request:
+            # A request granted immediately is a CPU user, not a waiting job.
+            node.max_queue = max(node.max_queue, len(node.cpu.queue))
             yield request
             row['queue_ms'] = self.env.now-before
             if self._expired(task):

@@ -6,6 +6,7 @@ can use these rewards directly as a continuing semi-Markov episode.
 """
 from .simulator import Simulator
 from dataclasses import dataclass
+from .workload import source_identity
 
 ACTIONS = ('local', 'edge', 'cloud')
 
@@ -20,8 +21,8 @@ class EpisodeSplit:
         for partition in (self.training, self.testing):
             if not partition or any(not t.source_path for t in partition):
                 raise ValueError('Episode split requires nonempty source identities')
-        train_ids = {(t.dataset, t.source_path) for t in self.training}
-        test_ids = {(t.dataset, t.source_path) for t in self.testing}
+        train_ids = {source_identity(t.source_path) for t in self.training}
+        test_ids = {source_identity(t.source_path) for t in self.testing}
         if train_ids & test_ids:
             raise ValueError('Training/test episode image overlap')
 

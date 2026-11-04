@@ -5,12 +5,18 @@ from pathlib import Path
 from .models import Task
 from statistics import median
 from math import isfinite
+import posixpath
+
+
+def source_identity(source_path):
+    """Dataset labels cannot turn the same relative file into a new image."""
+    return posixpath.normpath(str(source_path).replace('\\', '/'))
 
 
 def calibration_estimate(training, testing):
     """Constant historical median, fitted only to a disjoint calibration set."""
     def identities(rows):
-        return {(r.get('dataset', ''), r.get('source_path', '')) for r in rows}
+        return {source_identity(r.get('source_path', '')) for r in rows}
     if not training or any(not r.get('source_path') for r in training + testing):
         raise ValueError('Calibration and test rows require source identities')
     if identities(training) & identities(testing):
