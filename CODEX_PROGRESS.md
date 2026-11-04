@@ -1,6 +1,6 @@
 # 正式實驗本輪已完成（2026-11-04，Asia/Taipei）
 
-- 起點8a80cc5。階段提交：4ef5e10（metadata群組分割/情境登錄）、721cede（正式估計器與相容介面）。後續正式比較/報告提交見本檔後續封存紀錄與delivery-manifest.json。
+- 起點8a80cc5。階段提交：4ef5e10（metadata群組分割/情境登錄）、721cede（正式估計器與相容介面）。正式比較/報告提交fa162ee；最終封存HEAD見delivery-manifest.json。
 - Phase1：320/320真實成功圖；LFW與WIDER各40 training、20 validation、100新test。train/val重用107張有效三次量測，新213張預熱+3正式共852次InsightFace呼叫。逐圖原始時間/中位數/人臉數/設備版本/失敗欄保存，無合成推論時間。新test200圖與242張歷史已測圖片的SHA256交集0。
 - 分割seed20261104；LFW人物群組40/20/100、WIDER事件群組20/11/16，跨角色group/path/hash0重疊；320圖64bit dHash距離均>4。WIDER人物/所有語意近重複不能完全驗證，已說明。
 - 時序：資料split在新增推論前凍結；情境矩陣在量測進行中、模型選擇/策略評估前凍結，不宣稱矩陣早於所有圖片推論。選圖/情境不使用新test結果挑勝者。
