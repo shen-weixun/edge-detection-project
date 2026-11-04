@@ -1,3 +1,46 @@
+# 本輪最終驗收更新（2026-11-04，Asia/Taipei）
+
+- 本輪驗收起點 `0ef365b`，初始工作目錄乾淨；之前四報告、九格實驗與資料皆保留。
+- 發現並先以失敗回歸重現兩類問題：單任務立即取得CPU仍出現max_queue=1；同一來源改dataset標籤/./別名可繞過校準與RL分割guard。4項新增回歸原本3失敗/1通過。
+- 最小修正：Resource.queue/count決定等待/占用、真正排入CPU後更新max_queue；正規化來源路徑作身份，校準和EpisodeSplit共用。沒有改服務時間、策略公式、Laya模型/提示或Profile。
+- 最終64/64單元測試、78/78本輪API檢查通過。三受控情境A→Local、B→Edge、C→Cloud。
+- 獨立FCFS參考核對77次run、518筆結果，最大誤差3.2401e-12 ms。LFW30同圖5策略低中高負載450筆，每組另做確定性重播；網路/算力24格+24次自適應選擇通過。
+- 修改前版本0ef365b與修改後重播15組相同負載：節點分配相同、CPU/網路/終止時間差0 ms；低負載max_queue由1改0。
+- 4組真實校準/測試比較的來源與內容SHA256重疊皆0，改測試標籤不改估計。LFW MAE78.906/RMSE107.731 ms；LFW先驗→WIDER_train MAE567.770/RMSE1404.073，→WIDER_val3 MAE738.958/RMSE1234.688 ms，需揭露分布外低估。
+- Laya真實36次排列/重複+3筆序列成本稽核：39/39原始輸出與實際選擇一致、零fallback/截斷；18/18相同排列重複對一致，但三情境排列不變性全FAIL、成本最低選擇僅8/36。未用規則代替AI。
+- 本輪最終判定：SimPy在已宣告假設下有條件PASS，可進入單學期課堂實驗；Laya可靠性FAIL，WIDER準確預測/真實遠端效能不在可支持主張內。完整七項回答見SIMPY_FINAL_ACCEPTANCE.md。
+- 證據獨立保存於work/final-acceptance/，API輸出分流至api-integration/，沒有覆寫work/audit/或先前交付outputs/simpy-audit/。
+- 最終建置映像已啟動。未刪除資料庫、資料集、模型快取或volume，未做破壞性Git操作。
+- Git：本輪修正及驗證實作提交 `877d653`；後續報告/進度另提交，無未提交的其他組員修改。
+
+## 本輪恢復與重現
+
+從原edge-detection-project根目錄：
+
+```powershell
+docker compose -f compose.yaml -f compose.ai.yaml up -d --build
+docker compose exec -T backend python -m unittest discover -s tests -v
+docker compose exec -T backend mkdir -p /app/scripts
+docker compose cp scripts/run_final_acceptance.py backend:/app/scripts/run_final_acceptance.py
+docker compose cp scripts/run_laya_acceptance.py backend:/app/scripts/run_laya_acceptance.py
+docker compose exec -T backend python /app/scripts/run_final_acceptance.py
+docker compose exec -T backend python /app/scripts/run_laya_acceptance.py
+docker compose cp backend:/tmp/final-acceptance/. work/final-acceptance/results/
+$env:WORKLOAD_PROFILE_ID='6ddb0a187ba44065a5beaf0450ad259e'
+$env:CALIBRATION_PROFILE_ID='a057ded0f08c4837beff2ffd02f390ee'
+$env:INTEGRATION_OUTPUT='work/final-acceptance/api-integration'
+python scripts/verify_integration.py --reuse-profiles
+python scripts/build_final_acceptance_report.py
+```
+
+產報表前須保有本輪final-tests.txt及results/before-after-regression.json；這兩項都在交付證據副本中。若重跑單元，將完整輸出另存final-tests.txt；compare_before.py及before-source/保留在證據目錄，可獨立重播基準。不要以診斷腳本exit=0冒稱Laya可靠性通過，應讀laya-summary.json。
+
+本輪無必要工作未完成。未測範圍：真實遠端硬體、網路擾動/能耗/多核心、DQN/DDQN權重訓練、跨瀏覽器完整UI回歸；這些均未宣稱通過。下一步可依報告的DQN資料/觀測/action/reward契約啟動獨立訓練工作。
+
+---
+
+# 前輪歷史進度（以下內容保留，52項與九格結論屬當時版本）
+
 # Codex 執行進度與恢復方式
 
 ## 完成狀態
