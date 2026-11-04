@@ -9,6 +9,7 @@ from .db import Base, engine, Session, Sample, Run
 from .datasets import safe_path
 from . import inference
 from .execution import Strategy, execute_local
+from .offloading.api import router as offloading_router
 
 @asynccontextmanager
 async def lifespan(app):
@@ -16,9 +17,12 @@ async def lifespan(app):
     yield
 
 app = FastAPI(title="FaceLab API", lifespan=lifespan)
+app.include_router(offloading_router)
 root = Path(os.getenv("DATASET_ROOT", "/datasets")).resolve()
 
 def run(kind, fn, strategy: Strategy = 'fixed'):
+    if strategy != 'fixed':
+        raise HTTPException(422, '此端點僅執行本機 InsightFace；請到模擬器選擇卸載策略。DQN/DDQN 尚未實作。')
     try:
         result = execute_local(fn, strategy)
     except ValueError as exc:

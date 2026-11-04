@@ -1,0 +1,21 @@
+name: Offloading simulation tests
+on:
+  pull_request:
+  push:
+    branches: [main, feature/edgecloud-simpy-laya]
+jobs:
+  offloading:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install isolated simulation dependencies
+        run: python -m pip install 'simpy==4.1.1'
+      - name: Validate source syntax
+        run: python -m compileall -q backend/app/offloading laya_service
+      - name: Run simulation and policy tests
+        env:
+          PYTHONPATH: backend
+        run: python -m unittest discover -s backend/tests -p test_offloading.py -v

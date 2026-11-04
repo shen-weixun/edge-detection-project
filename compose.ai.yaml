@@ -1,0 +1,19 @@
+# Optional service; the standard 'docker compose up -d --build' remains unchanged.
+services:
+  backend:
+    environment:
+      LAYA_URL: http://laya:8001/decide
+  laya:
+    build: ./laya_service
+    environment:
+      HF_HOME: /models/huggingface
+      LAYA_DEVICE: cpu
+      USE_TF: '0'
+      LAYA_AUDIT_ROOT: /audit
+    volumes:
+      - laya_cache:/models
+      - ./profiles/laya_audit:/audit
+    restart: unless-stopped
+    # Accessible only to containers on the Compose network; no published host port.
+volumes:
+  laya_cache:

@@ -9,3 +9,7 @@ dist/
 *.pyc
 .test-tmp/
 .fixtures/
+
+profiles/
+work/
+*.before-offloading.bak

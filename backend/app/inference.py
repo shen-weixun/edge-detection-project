@@ -22,7 +22,7 @@ def decode(data: bytes):
     except (UnidentifiedImageError, OSError, Image.DecompressionBombError) as exc:
         raise ValueError("無法讀取圖片，請使用 JPEG 或 PNG") from exc
 
-def analyze(image):
+def initialize_model():
     global model
     with lock:
         if model is None:
@@ -30,7 +30,21 @@ def analyze(image):
             instance = FaceAnalysis(name="buffalo_l", root=os.getenv("MODEL_ROOT", "/models"), allowed_modules=["detection", "recognition"], providers=["CPUExecutionProvider"])
             instance.prepare(ctx_id=-1, det_size=(640, 640), det_thresh=0.5)
             model = instance
+        return model
+
+def analyze(image):
+    initialize_model()
+    with lock:
         return model.get(image)
+
+def measure(image):
+    """Measure model execution only, excluding initialization and lock wait."""
+    from time import perf_counter
+    initialize_model()
+    with lock:
+        start = perf_counter()
+        faces = model.get(image)
+        return faces, (perf_counter() - start) * 1000
 
 def detection(image):
     faces = analyze(image)

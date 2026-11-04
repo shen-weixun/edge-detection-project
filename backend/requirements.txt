@@ -9,3 +9,4 @@ onnxruntime==1.21.1
 insightface==0.7.3
 Pillow==11.2.1
 python-dotenv==1.1.0
+simpy==4.1.1
