@@ -21,7 +21,13 @@ for identifier in profileids:
  for suffix in ('.json','.csv'):shutil.copy2(ROOT/'profiles'/(identifier+suffix),out/'profiles'/(identifier+suffix))
 for identifier in selected['models'].values():shutil.copy2(ROOT/'profiles/estimators'/(identifier+'.json'),out/'profiles/estimators'/(identifier+'.json'))
 head=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip();baseline=subprocess.check_output(['git','rev-parse','8a80cc5'],cwd=ROOT,text=True).strip()
-subprocess.run(['git','archive','--format=zip','--output='+str(out/'source-snapshot.zip'),head],cwd=ROOT,check=True)
+# Preserve exact runtime line endings for strict restart hash checks.
+assert not subprocess.check_output(['git','status','--porcelain'],cwd=ROOT,text=True).strip(),'Commit before sealing'
+tracked=subprocess.check_output(['git','ls-files','-z'],cwd=ROOT).decode('utf-8').split('\0')
+with zipfile.ZipFile(out/'source-snapshot.zip','w',zipfile.ZIP_DEFLATED) as sourcezip:
+ for name in tracked:
+  if name and (ROOT/name).is_file():sourcezip.write(ROOT/name,name)
+
 subprocess.run(['git','diff','--binary','--output='+str(out/'changes.patch'),baseline,head],cwd=ROOT,check=True)
 manifest=dict(commit=head,baseline_commit=baseline,data_seed=20261104,training_images=80,validation_images=40,test_images=200,test_groups=dict(lfw=100,wider_train=16),new_insightface_images=213,insightface_calls=852,reused_real_measurements=107,new_laya_calls=0,matrix_scenarios=432,strategy_runs=3456,formal_task_results=345600,tests=json.loads((W/'tests/test-summary.json').read_text()),model_ids=selected['models'],test_profile_ids={k:v for k,v in ids.items() if k.endswith('testing')},limits='Same declared SimPy assumptions and single measurement host; WIDER event groups are not verified person identities. Real DQN/DDQN models and browser click/visual flows NOT VERIFIED. No copied images, model weights, datasets, DB or secrets bundled.')
 (out/'delivery-manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2),encoding='utf-8')

@@ -12,6 +12,7 @@
 - Phase5：新增獨立integration_contract.py：49可觀測特徵、0/1/2動作、外部policy使用同Simulator/metrics、三分割群組/hash guard。原RL/核心/Baseline/V1/V2/估計器/Laya10個檔逐位元組未改。實際DQN/DDQN模型與HTTP key註冊仍NOT VERIFIED/未支援，介面問題與適配範例在TEAM_INTEGRATION_CONTRACT.md，不修改組員程式。
 - 完整重建後85/85後端（原77+8介面）、2/2 Laya服務mock、109/109 HTTP回歸通過；包括新100圖Profile/CSV三次中位數/校驗、舊calibration/default5、隔離guard、網路/丟棄模式與網站真實辨識。Laya新增模型呼叫0。Docker backend/db/laya healthy、frontend running，JS語法PASS。瀏覽器視覺點擊NOT VERIFIED。
 - 先前三份證據包402個檔雜湊核對未變；沒有刪除/覆寫舊實驗、DB、資料、模型/volume。五報告、全部CSV/raw JSON.gz/圖表與logs於本輪outputs/formal-evaluation。
+- 封存驗證抓到Git archive的autocrlf換行轉換會使部分runtime來源hash不符，影響嚴格接續重播；只修封存腳本，改封存已提交工作樹的原始bytes。初版封存保留於本chat workspace work/，正式數據與策略未改。
 - 可執行工作已完成。可用作宣告模型假設下的正式課堂證據；不支持實際遠端平台速度、Laya可靠數值決策、未測DQN成績或全面Ridge/V2勝出。後續只在提供真實組員模型/外部硬體時再做相應驗證，不需重測有效資料。
 
 ## 本輪恢復與重現
