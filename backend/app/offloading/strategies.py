@@ -1,12 +1,12 @@
 """Decision policies observe only the current state; no access to future outcomes."""
-from .models import Task, SystemState, NodeState
+from .models import DecisionTask as Task, SystemState, NodeState
 
 
 def estimate_latency(task: Task, node: NodeState) -> float:
     if not node.available:
         return float("inf")
-    compute = task.workload_ms / node.compute_speed
-    queue = node.queue_work_ms / node.compute_speed
+    compute = task.estimated_workload_ms / node.compute_speed
+    queue = (node.queue_work_ms + node.committed_work_ms) / node.compute_speed
     if node.name == "local":
         return queue + compute
     upload = task.image_size_mb * 8_000 / node.bandwidth_mbps
@@ -34,7 +34,7 @@ class LoadThresholdStrategy:
         self.threshold = threshold
 
     def select_node(self, task: Task, state: SystemState) -> str:
-        if state.edge.available and state.edge.queue_length < self.threshold:
+        if state.edge.available and state.edge.queue_length + state.edge.committed_count < self.threshold:
             return "edge"
         if state.cloud.available:
             return "cloud"

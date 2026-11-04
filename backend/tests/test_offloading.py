@@ -1,6 +1,6 @@
 import unittest
 from unittest.mock import patch
-from app.offloading.models import Task, NodeConfig, NodeState, SystemState
+from app.offloading.models import Task, NodeConfig, NodeState, SystemState, DecisionTask
 from app.offloading.strategies import LatencyAwareStrategy, estimate_latency
 from app.offloading.experiment import experiment
 from app.offloading.workload import generate_tasks
@@ -10,7 +10,7 @@ from app.offloading.laya_client import LayaStrategy
 
 class StrategiesTest(unittest.TestCase):
     def setUp(self):
-        self.task = Task(1, 1, 2, 200, 0, 500)
+        self.task = DecisionTask.observe(Task(1, 1, 2, 200, 0, 500, estimated_workload_ms=200))
         self.state = SystemState(
             NodeState("local", 1, 0, 0, 0, 1000),
             NodeState("edge", 4, 0, 0, 20, 200),

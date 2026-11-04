@@ -3,7 +3,8 @@ import json
 import os
 from urllib.request import Request, urlopen
 from urllib.error import HTTPError, URLError
-from .models import Task, SystemState
+from dataclasses import asdict
+from .models import DecisionTask as Task, SystemState
 
 
 class LayaStrategy:
@@ -15,13 +16,11 @@ class LayaStrategy:
         self.last_audit_id = None
 
     def select_node(self, task: Task, state: SystemState) -> str:
+        if not isinstance(task, Task):
+            raise TypeError('Laya requires DecisionTask; internal Task is not a policy input')
         data = {
-            'context': {'task_id': task.task_id, 'source_path': task.source_path, 'dataset': task.dataset, 'sample_id': task.sample_id},
-            "task": {"image_size_mb": task.image_size_mb,
-                     "face_count": task.face_count,
-                     "workload_ms": task.workload_ms,
-                     "deadline_ms": task.deadline_ms,
-                     "result_size_kb": task.result_size_kb},
+            'context': {'task_id': task.task_id},
+            "task": asdict(task),
             "nodes": [vars(n) for n in state.nodes()],
         }
         payload = json.dumps(data, allow_nan=False).encode("utf-8")

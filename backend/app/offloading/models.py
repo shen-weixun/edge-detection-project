@@ -15,16 +15,39 @@ class Task:
     source_path: str = ''
     dataset: str = ''
     sample_id: str = ''
+    width: int = 0
+    height: int = 0
+    estimated_workload_ms: float = 150.0
 
     def __post_init__(self):
         if self.task_id < 0 or self.face_count < 0:
             raise ValueError("task_id and face_count cannot be negative")
-        for name in ("image_size_mb", "workload_ms", "deadline_ms", "result_size_kb"):
+        for name in ("image_size_mb", "workload_ms", "deadline_ms", "result_size_kb", "estimated_workload_ms"):
             value = getattr(self, name)
             if not isfinite(value) or value <= 0:
                 raise ValueError(f"{name} must be finite and > 0")
         if not isfinite(self.arrival_ms) or self.arrival_ms < 0:
             raise ValueError("arrival_ms must be finite and >= 0")
+
+
+@dataclass(frozen=True)
+class DecisionTask:
+    """Only decision-time observables. No identity/path or post-inference labels."""
+    task_id: int
+    image_size_mb: float
+    width: int
+    height: int
+    arrival_ms: float
+    deadline_ms: float
+    estimated_workload_ms: float
+    result_size_kb: float
+
+    @classmethod
+    def observe(cls, task, information_mode='realistic'):
+        return cls(task.task_id, task.image_size_mb, task.width, task.height,
+                   task.arrival_ms, task.deadline_ms,
+                   task.workload_ms if information_mode == 'oracle' else task.estimated_workload_ms,
+                   task.result_size_kb)
 
 
 @dataclass(frozen=True)
@@ -38,6 +61,12 @@ class NodeState:
     upload_backlog_ms: float = 0.0
     download_backlog_ms: float = 0.0
     available: bool = True
+    cpu_running: int = 0
+    committed_count: int = 0
+    transmitting_count: int = 0
+    returning_count: int = 0
+    committed_work_ms: float = 0.0
+    observed_at_ms: float = 0.0
 
 
 @dataclass(frozen=True)

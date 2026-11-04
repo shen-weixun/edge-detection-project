@@ -3,6 +3,22 @@ import csv
 import random
 from pathlib import Path
 from .models import Task
+from statistics import median
+from math import isfinite
+
+
+def calibration_estimate(training, testing):
+    """Constant historical median, fitted only to a disjoint calibration set."""
+    def identities(rows):
+        return {(r.get('dataset', ''), r.get('source_path', '')) for r in rows}
+    if not training or any(not r.get('source_path') for r in training + testing):
+        raise ValueError('Calibration and test rows require source identities')
+    if identities(training) & identities(testing):
+        raise ValueError('Calibration/test image overlap')
+    value = median(r['workload_ms'] for r in training)
+    if not isfinite(value) or value <= 0:
+        raise ValueError('Invalid calibration workload')
+    return value
 
 
 def load_profile(path):
@@ -21,7 +37,8 @@ def load_profile(path):
             # Reuse Task's validation: no negative, nonfinite or zero workloads.
             Task(0, image_mb, face_count, workload_ms, 0, 1000)
             rows.append(dict(image_size_mb=image_mb, face_count=face_count, workload_ms=workload_ms,
-                             source_path=item['source_path'], dataset=item['dataset'], sample_id=item['sample_id']))
+                             source_path=item['source_path'], dataset=item['dataset'], sample_id=item['sample_id'],
+                             width=int(item.get('width') or 0), height=int(item.get('height') or 0)))
     if not rows:
         raise ValueError("Workload Profile CSV is empty")
     return rows
@@ -29,7 +46,7 @@ def load_profile(path):
 
 def generate_tasks(count=30, interval_ms=70.0, seed=42, deadline_ms=500.0,
                    profile=None):
-    if not 1 <= count <= 500 or interval_ms <= 0 or deadline_ms <= 0:
+    if not 1 <= count <= 500 or not isfinite(interval_ms) or not isfinite(deadline_ms) or interval_ms <= 0 or deadline_ms <= 0:
         raise ValueError("invalid task configuration")
     rng = random.Random(seed)
     # These are DEMO assumptions, NOT InsightFace measurements.

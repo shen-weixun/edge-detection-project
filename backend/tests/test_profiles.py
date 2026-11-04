@@ -58,8 +58,8 @@ class ProfileTests(unittest.TestCase):
 
     def test_measured_policy_fairness_and_reset(self):
         p=[dict(image_size_mb=1,face_count=1,workload_ms=100,source_path=str(i),dataset='lfw',sample_id=str(i)) for i in range(3)]
-        a=experiment(count=3,profile=p,include_decision_overhead=False)
-        b=experiment(count=3,profile=p,include_decision_overhead=False)
+        a=experiment(count=3,profile=p,calibration_profile=[dict(dataset="lfw", source_path="training.jpg", workload_ms=120)],include_decision_overhead=False)
+        b=experiment(count=3,profile=p,calibration_profile=[dict(dataset="lfw", source_path="training.jpg", workload_ms=120)],include_decision_overhead=False)
         self.assertEqual(a['workload_sha256'],b['workload_sha256'])
         for r in a['strategies'].values():
             self.assertEqual([x['task'] for x in r['tasks']],a['workload'])
@@ -69,7 +69,7 @@ class ProfileTests(unittest.TestCase):
     def test_decision_deadline_and_component_sum(self):
         with patch('app.offloading.simulator.perf_counter',side_effect=[1,1.6]):
             r=Simulator([Task(0,1,1,100,0,500)],FixedStrategy('local')).run()[0]
-        self.assertFalse(r['deadline_met']);self.assertEqual(r['decision_ms'],600)
+        self.assertFalse(r['deadline_met']);self.assertAlmostEqual(r['decision_ms'],600,places=8)
         self.assertAlmostEqual(r['total_latency_ms'],sum(r[k] for k in ['network_ms','queue_ms','compute_ms','decision_ms','decision_queue_ms']),places=3)
 
     def test_decision_engine_serial_queue(self):

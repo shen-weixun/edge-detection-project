@@ -27,6 +27,11 @@ class ExperimentRequest(BaseModel):
     deadline_ms: float = Field(default=500, gt=0, le=120_000)
     seed: int = Field(default=42, ge=0, le=2**31-1)
     include_decision_overhead: bool = True
+    information_mode: Literal["realistic", "oracle"] = "realistic"
+    network_mode: Literal["independent", "shared"] = "independent"
+    shared_bandwidth_mbps: float = Field(default=120, gt=0, le=100000)
+    deadline_policy: Literal["complete_all", "drop_if_expired"] = "complete_all"
+    calibration_profile_id: str | None = None
     use_measured_profile: bool = False
     workload_mode: Literal['measured', 'synthetic'] | None = None
     profile_id: str | None = None
@@ -68,14 +73,21 @@ def run_experiment(request: ExperimentRequest):
             if not request.profile_id:
                 raise ValueError('請先完成量測並選擇 Profile；不會切換為合成資料')
             meta, profile = profiles.load(request.profile_id)
+        calibration = None
+        calibration_meta = None
+        if request.calibration_profile_id:
+            calibration_meta, calibration = profiles.load(request.calibration_profile_id)
         result = experiment(strategies=request.strategies,
                           count=request.count, interval_ms=request.interval_ms,
                           seed=request.seed, deadline_ms=request.deadline_ms,
                           include_decision_overhead=request.include_decision_overhead,
-                          profile=profile,
+                          profile=profile, calibration_profile=calibration,
+                          information_mode=request.information_mode, network_mode=request.network_mode,
+                          shared_bandwidth_mbps=request.shared_bandwidth_mbps, deadline_policy=request.deadline_policy,
                           nodes={k: NodeConfig(**v.model_dump()) for k, v in request.nodes.items()}
                           if request.nodes else None)
         result['profile'] = meta
+        result['calibration_profile'] = calibration_meta
         return result
     except (ValueError, FileNotFoundError, KeyError) as exc:
         raise HTTPException(status_code=422, detail=str(exc)) from exc
