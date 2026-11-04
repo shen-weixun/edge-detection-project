@@ -1,3 +1,20 @@
+# 正式資料與組員整合：本輪進行中（2026-11-04）
+
+- 起點8a80cc5，Git乾淨；既有核心、V1/Baseline、RL與兩個Laya版本凍結，10個原始檔雜湊保存在work/formal-evaluation/protected-baseline.json。
+- 已讀前輪驗收與原始碼；資料庫LFW13233、WIDER_train12880、WIDER_val3226，足夠實測。
+- 新分割seed20261104，LFW人物與WIDER事件資料夾互斥。每資料集40 training/20 validation/100 testing，320圖片內容SHA256與64bit dHash距離<=4去重，選圖不看推論時間；test排除全部已註冊歷史量測圖片。本次dHash排除0。完整plan在/profiles/formal-evaluation/plan.json與host work/formal-evaluation/plan.json，凍結後不依結果換圖。
+- 訓練/驗證重用107張相同buffalo_l/CPU/三次正式實測（CSV校驗有效）；其餘213張預熱+3次正式，預計852次InsightFace呼叫。逐圖片持久化/profiles/formal-evaluation/measurements，可續跑；不重測有效資料。
+- 正式矩陣已在任何新test推論與策略評估前固定：8環境×3間隔70/300/1000×3 deadline500/1000/2000×3 seeds11/23/37×2資料集=432情境格，每格100圖全部使用，只改順序。六個Median策略+兩個Ridge策略，共3456策略run/345600任務結果。raw/log ridge α候選0.1/1/10，只用validation MAE選；三因素比較分開。
+- Laya原版/V2均不再調參，本輪新增模型決策預算0。重用90次固定可靠性診斷與已存端到端/消融原始紀錄，重新核對raw choice，不將舊資料偽稱新100圖實驗。不作大型Laya矩陣。
+- 新增共用integration_contract.py僅為可觀測49特徵/0,1,2動作/外部policy呼叫與三分割guard，沒有更改組員RL；新增8項相容測試待資料量測後統一驗證。
+- 下一步：完成量測→檢查完整性與分割→訓練驗證選模→固定test評估及分群CI→432格策略比較→Laya既有證據稽核→完整回歸、五報告與outputs/formal-evaluation封存。
+
+恢復：docker compose exec -T backend python /app/scripts/formal_dataset.py（自動略過已持久化圖片）。不要重建容器前丟失/app/scripts；源腳本已存scripts/formal_dataset.py，可重新docker compose cp。/profiles持久化不會被重建清除。
+
+---
+
+# 前輪完成紀錄（歷史）
+
 # 論文啟發改善：本輪已完成（2026-11-04，Asia/Taipei）
 
 - 起點9739b39，初始Git乾淨；實作階段commit f312837；完整比較/驗證與五報告commit cf66d4d。五份本輪報告已生成，原驗收文件/實驗不覆寫。
