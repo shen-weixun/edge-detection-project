@@ -1,6 +1,6 @@
 # 組員模型審查與AI分層pilot：本輪完成（2026-11-06，Asia/Taipei）
 
-- 起點7a38ef7，Git初始乾淨。第一階段commit caf6894。本輪只新增隔離模型檢查/共同子集runner、分層報表/前端與tests，原SimPy/V1/V2/估計器/RL/Laya等11檔SHA全部未變。
+- 起點7a38ef7，Git初始乾淨。第一階段commit caf6894；完整分層pilot/前端與測試commit 19d6501。本輪只新增隔離模型檢查/共同子集runner、分層報表/前端與tests，原SimPy/V1/V2/估計器/RL/Laya等11檔SHA全部未變。
 - backend.rar獨立解至work/ai-comparison/incoming，6來源/weights原始SHA與RAR SHA驗證未變，沒有覆蓋production backend、改寫組員訓練或更新權重。
 - DQN/DDQN皆真正載入7×32-ReLU×3 NPZ（arr0..3），全部finite、不同數值state Q會變化，30 probes各重複20次epsilon0確定且Q argmax=action，測得合法0/1/2。49維直接送入會ValueError。weights不同seed42初始，但無訓練證據；沒有用微秒probe當正式性能。
 - DQN/DDQN FORMAL INTEGRATION: BLOCKED。七維名稱/順序/單位/scaler/訓練資料split/Reward/訓練action mapping/環境/選checkpoint證據缺失；未任取49→7，未建立假Adapter，未宣稱已正確訓練。TEAM_BLOCKERS.md有具體必補資料與golden fixtures。
