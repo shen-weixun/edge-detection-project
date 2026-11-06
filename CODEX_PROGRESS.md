@@ -1,3 +1,17 @@
+# AI共同子集比較與組員模型檢查（2026-11-06，進行中）
+
+- 起點7a38ef7，Git乾淨；原SimPy/V1/Estimator/Laya與RL等11檔來源SHA保存work/ai-comparison/protected-baseline.json，禁止覆寫原backend。
+- backend.rar已列目錄並獨立解至work/ai-comparison/incoming/，只將隔離副本放container /tmp/member-review；RAR/6原始檔與weights SHA保存，未修改來源、未呼叫train_step。
+- 實際兩模型load與30個純數值probe/每個20次epsilon0重複通過：架構7×32→3、arr0..3完整finite、Q隨輸入變化、action涵蓋0/1/2、重複確定。weights不同於seed42初始值，但不構成訓練證據；無資料/環境/reward/scaler/訓練logs。
+- snippet錯誤已實際重現：DQN/DDQN無decide() AttributeError；threshold_decide(state)缺edge_cpu TypeError。threshold百分比語義沒有直接映成SimPy queues，保留原Load-threshold。
+- DQN/DDQN FORMAL INTEGRATION: BLOCKED。七維名稱/順序/單位/正規化/訓練資料/Reward/訓練action mapping/環境皆未確認，不猜49→7、不訓練或修改組員權重，保留獨立推論證據，繼續其他策略。
+- 24格10圖pilot事前凍結：LFW/WIDER×Low/Medium/High×原有Local/Edge/Cloud-favorable及Reference，seed11，Deadline1000，realistic、complete_all、原訓練Median。每個資料集從凍結100圖按seed11固定取10張，所有8個可用策略完全相同子集與順序。DQN/DDQN每格顯示BLOCKED，不填性能。
+- 負載以事前共同子集的實測平均compute/參考Edge speed3校準，reference CPU rho=0.3/0.9/1.5；僅設計固定到達間隔，未用於fit預估器或傳個別真值給policy。非宣稱每個網路/策略皆同實現利用率，另保存各節點counterfactual rho/完整速率與服務能力。
+- 新Laya預算480次live task decision+2次一致預熱=482次，按先前CPU均值估約678秒，單policy10任務checkpoint；每decision記錄在timer外寫入，failure/部分run明列、不混Replay、不fallback。DQN契約BLOCKED且Laya既有可靠性FAIL，不擴大30圖比較。
+- 下一步執行24格真實Laya共同子集、稽核audit/time/CPU/link、建立分層網頁與四種圖表及CSV/JSON匯出、完整回歸、封存outputs/ai-comparison。下方為先前完成紀錄。
+
+---
+
 # 正式實驗本輪已完成（2026-11-04，Asia/Taipei）
 
 - 起點8a80cc5。階段提交：4ef5e10（metadata群組分割/情境登錄）、721cede（正式估計器與相容介面）。正式比較/報告提交fa162ee；最終封存HEAD見delivery-manifest.json。
