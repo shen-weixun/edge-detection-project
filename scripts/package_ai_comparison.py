@@ -5,7 +5,7 @@ ROOT=Path(__file__).resolve().parents[1];DATA=ROOT/'profiles/ai-comparison';W=RO
 a=argparse.ArgumentParser();a.add_argument('--output',required=True,type=Path);args=a.parse_args();out=args.output.resolve();archive=out.with_suffix('.zip')
 if out.exists() or archive.exists():raise SystemExit('Existing delivery preserved: choose another output')
 assert not subprocess.check_output(['git','status','--porcelain'],cwd=ROOT,text=True).strip(),'Commit before sealing'
-v=json.loads((DATA/'validation-summary.json').read_text());assert v['status_counts']=={'PASS':192,'BLOCKED':48} and v['verified_laya_task_choices']==480
+v=json.loads((DATA/'validation-summary.json').read_text(encoding='utf-8-sig'));assert v['status_counts']=={'PASS':192,'BLOCKED':48} and v['verified_laya_task_choices']==480
 shutil.copytree(DATA,out)
 for name in ('AI_COMPARISON_REPORT.md','TEAM_BLOCKERS.md','RUN_TESTS.md','model_validation.md','CODEX_PROGRESS.md'):shutil.copy2(ROOT/name,out/name)
 shutil.copytree(W/'incoming/backend',out/'member-original/backend')
@@ -14,7 +14,7 @@ shutil.copy2(Path(r'C:\Users\wubai\Downloads\backend.rar'),out/'member-original/
 for p in W.iterdir():
  if p.is_file() and p.suffix in ('.log','.json','.txt'):shutil.copy2(p,out/'run-logs'/p.name)
 # Preserve reusable profile/model inputs, not photos, DB or InsightFace weights.
-formal=ROOT/'profiles/formal-evaluation';ids=json.loads((formal/'profile-ids.json').read_text());model=json.loads((formal/'evaluation/fit-complete.json').read_text())['models']['median'];(out/'profiles/estimators').mkdir(parents=True)
+formal=ROOT/'profiles/formal-evaluation';ids=json.loads((formal/'profile-ids.json').read_text(encoding='utf-8-sig'));model=json.loads((formal/'evaluation/fit-complete.json').read_text(encoding='utf-8-sig'))['models']['median'];(out/'profiles/estimators').mkdir(parents=True)
 for dataset in ('lfw','wider_train'):
  for role in ('training','validation','testing'):
   for suffix in ('.json','.csv'):shutil.copy2(ROOT/'profiles'/(ids[dataset+'/'+role]+suffix),out/'profiles'/(ids[dataset+'/'+role]+suffix))
@@ -25,7 +25,7 @@ with zipfile.ZipFile(out/'source-snapshot.zip','w',zipfile.ZIP_DEFLATED) as z:
  for name in tracked:
   if name and (ROOT/name).is_file():z.write(ROOT/name,name)
 subprocess.run(['git','diff','--binary','--output='+str(out/'changes.patch'),base,head],cwd=ROOT,check=True)
-manifest=dict(source_commit=head,baseline_commit=base,member_formal_integration='BLOCKED',reasons='Unknown seven-feature semantics, normalization, training/reward/environment/test split provenance',member_files_sha256=json.loads((DATA/'model-validation/model_validation.json').read_text())['source_sha256'],scenes=24,count_per_scenario=10,seed=11,deadline_ms=1000,completed_policy_runs=192,blocked_rows=48,completed_task_results=1920,live_laya_task_decisions=480,warmup_calls=2,replay=False,test_summary=json.loads((DATA/'tests/test-summary.json').read_text()),limits='Pilot only; not a trained DQN/DDQN evaluation or pooled ranking. Pure cold model load not measured because service was already loaded. Images, DB, caches, environment secrets and InsightFace/Laya weights excluded; member-provided weights preserved unchanged.')
+manifest=dict(source_commit=head,baseline_commit=base,member_formal_integration='BLOCKED',reasons='Unknown seven-feature semantics, normalization, training/reward/environment/test split provenance',member_files_sha256=json.loads((DATA/'model-validation/model_validation.json').read_text(encoding='utf-8-sig'))['source_sha256'],scenes=24,count_per_scenario=10,seed=11,deadline_ms=1000,completed_policy_runs=192,blocked_rows=48,completed_task_results=1920,live_laya_task_decisions=480,warmup_calls=2,replay=False,test_summary=json.loads((DATA/'tests/test-summary.json').read_text(encoding='utf-8-sig')),limits='Pilot only; not a trained DQN/DDQN evaluation or pooled ranking. Pure cold model load not measured because service was already loaded. Images, DB, caches, environment secrets and InsightFace/Laya weights excluded; member-provided weights preserved unchanged.')
 (out/'delivery-manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2),encoding='utf-8')
 (out/'README.md').write_text('''# AI比較交付：已完成共同10圖pilot，DQN/DDQN契約BLOCKED
 

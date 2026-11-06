@@ -14,6 +14,7 @@
 - 實際測試PASS：原85後端+4pilot契約+2服務mock+9前端資料+59真實headless Edge E2E+63HTTP。涵蓋24篩選/五指標/真正下載讀回/手機overflow/原網站InsightFace detect+verify。desktop/mobile/PNG已實際目視核對。先前CUA瀏覽器連線無法使用，改獨立headless profile，不控制現有使用者分頁。
 - 測試初次pilot腳本少import path，保存原錯誤log後只修測試路徑，4/4通過；雙欄小圖經目視後改成可讀單欄並重跑59 E2E。未放寬標準、未改正式策略或數據。
 - 原始組員6檔/RAR、共同20圖SHA、11受保護檔、先前四份交付包1282個檔SHA全部核對未變；未刪DB、dataset或cache/volume。Docker backend/db/laya healthy、frontend running，只有前端重建。
+- 封存曾遇Windows cp950預設編碼無法讀中文JSON，初版草稿保留於本chat work/ai-comparison-initial-encoding；只將封存讀取改明確UTF-8，不變更模型、實驗或CSV。
 - 可執行範圍已完成。未完成且無法代做者：七維/訓練契約與合法DQN/DDQN正式Adapter/公平模型比較；需組員提供文件後另開版本。不可把BLOCKED當PASS，也不能因缺資料猜映射。
 
 ## 重現、恢復與交付
