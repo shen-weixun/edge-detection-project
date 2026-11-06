@@ -1,0 +1,1331 @@
+{
+  "schema": "ai-comparison-view-v1",
+  "scope": "COMMON_10_IMAGE_LIVE_INTEGRATION_PILOT",
+  "scenarios": [
+    {
+      "id": "lfw-Low-local_advantage-n10-s11",
+      "dataset": "lfw",
+      "load": "Low",
+      "network": "local_advantage",
+      "interval_ms": 600.2829383335969,
+      "arrival_rate_per_second": 1.6658810972972669,
+      "reference_node": "Reference Edge CPU: speed=3, FCFS capacity=1",
+      "reference_mean_service_ms": 180.08488150007906,
+      "reference_service_rate_per_second": 5.55293699099089,
+      "reference_offered_cpu_load": 0.3,
+      "classification": "Low rho=0.3; Medium rho=0.9; High rho=1.5 relative to fixed reference Edge CPU, not whole-system utilization",
+      "design_basis": "Aggregate measured service of the predetermined common subset, fixed before any policy output; used only for arrival schedule, never fitted into predictor or supplied per-image to policy",
+      "per_node_compute_demand": {
+        "local": {
+          "mean_service_ms": 540.2546445002372,
+          "all_to_this_node_cpu_rho": 0.8999999999999999
+        },
+        "edge": {
+          "mean_service_ms": 180.08488150007906,
+          "all_to_this_node_cpu_rho": 0.3
+        },
+        "cloud": {
+          "mean_service_ms": 67.53183056252965,
+          "all_to_this_node_cpu_rho": 0.11249999999999999
+        }
+      },
+      "count": 10,
+      "seed": 11,
+      "deadline_ms": 1000,
+      "estimator_id": "5405ea0f82f73f4d37ac9b2c06f3f879c9add4cc60e03465c9d18843e9b19c48",
+      "include_decision_overhead": true,
+      "deadline_policy": "complete_all",
+      "information_mode": "realistic",
+      "nodes": {
+        "local": {
+          "speed": 1,
+          "rtt_ms": 0,
+          "bandwidth_mbps": 1000
+        },
+        "edge": {
+          "speed": 3,
+          "rtt_ms": 1000,
+          "bandwidth_mbps": 1
+        },
+        "cloud": {
+          "speed": 8,
+          "rtt_ms": 2000,
+          "bandwidth_mbps": 0.5
+        }
+      },
+      "network_mode": "independent",
+      "shared_bandwidth_mbps": 120,
+      "results_file": "scenarios/lfw-Low-local_advantage-n10-s11.json"
+    },
+    {
+      "id": "lfw-Low-edge_advantage-n10-s11",
+      "dataset": "lfw",
+      "load": "Low",
+      "network": "edge_advantage",
+      "interval_ms": 600.2829383335969,
+      "arrival_rate_per_second": 1.6658810972972669,
+      "reference_node": "Reference Edge CPU: speed=3, FCFS capacity=1",
+      "reference_mean_service_ms": 180.08488150007906,
+      "reference_service_rate_per_second": 5.55293699099089,
+      "reference_offered_cpu_load": 0.3,
+      "classification": "Low rho=0.3; Medium rho=0.9; High rho=1.5 relative to fixed reference Edge CPU, not whole-system utilization",
+      "design_basis": "Aggregate measured service of the predetermined common subset, fixed before any policy output; used only for arrival schedule, never fitted into predictor or supplied per-image to policy",
+      "per_node_compute_demand": {
+        "local": {
+          "mean_service_ms": 540.2546445002372,
+          "all_to_this_node_cpu_rho": 0.8999999999999999
+        },
+        "edge": {
+          "mean_service_ms": 90.04244075003953,
+          "all_to_this_node_cpu_rho": 0.15
+        },
+        "cloud": {
+          "mean_service_ms": 67.53183056252965,
+          "all_to_this_node_cpu_rho": 0.11249999999999999
+        }
+      },
+      "count": 10,
+      "seed": 11,
+      "deadline_ms": 1000,
+      "estimator_id": "5405ea0f82f73f4d37ac9b2c06f3f879c9add4cc60e03465c9d18843e9b19c48",
+      "include_decision_overhead": true,
+      "deadline_policy": "complete_all",
+      "information_mode": "realistic",
+      "nodes": {
+        "local": {
+          "speed": 1,
+          "rtt_ms": 0,
+          "bandwidth_mbps": 1000
+        },
+        "edge": {
+          "speed": 6,
+          "rtt_ms": 4,
+          "bandwidth_mbps": 1000
+        },
+        "cloud": {
+          "speed": 8,
+          "rtt_ms": 2000,
+          "bandwidth_mbps": 1
+        }
+      },
+      "network_mode": "independent",
+      "shared_bandwidth_mbps": 120,
+      "results_file": "scenarios/lfw-Low-edge_advantage-n10-s11.json"
+    },
+    {
+      "id": "lfw-Low-cloud_advantage-n10-s11",
+      "dataset": "lfw",
+      "load": "Low",
+      "network": "cloud_advantage",
+      "interval_ms": 600.2829383335969,
+      "arrival_rate_per_second": 1.6658810972972669,
+      "reference_node": "Reference Edge CPU: speed=3, FCFS capacity=1",
+      "reference_mean_service_ms": 180.08488150007906,
+      "reference_service_rate_per_second": 5.55293699099089,
+      "reference_offered_cpu_load": 0.3,
+      "classification": "Low rho=0.3; Medium rho=0.9; High rho=1.5 relative to fixed reference Edge CPU, not whole-system utilization",
+      "design_basis": "Aggregate measured service of the predetermined common subset, fixed before any policy output; used only for arrival schedule, never fitted into predictor or supplied per-image to policy",
+      "per_node_compute_demand": {
+        "local": {
+          "mean_service_ms": 540.2546445002372,
+          "all_to_this_node_cpu_rho": 0.8999999999999999
+        },
+        "edge": {
+          "mean_service_ms": 270.1273222501186,
+          "all_to_this_node_cpu_rho": 0.44999999999999996
+        },
+        "cloud": {
+          "mean_service_ms": 27.01273222501186,
+          "all_to_this_node_cpu_rho": 0.045
+        }
+      },
+      "count": 10,
+      "seed": 11,
+      "deadline_ms": 1000,
+      "estimator_id": "5405ea0f82f73f4d37ac9b2c06f3f879c9add4cc60e03465c9d18843e9b19c48",
+      "include_decision_overhead": true,
+      "deadline_policy": "complete_all",
+      "information_mode": "realistic",
+      "nodes": {
+        "local": {
+          "speed": 1,
+          "rtt_ms": 0,
+          "bandwidth_mbps": 1000
+        },
+        "edge": {
+          "speed": 2,
+          "rtt_ms": 30,
+          "bandwidth_mbps": 80
+        },
+        "cloud": {
+          "speed": 20,
+          "rtt_ms": 2,
+          "bandwidth_mbps": 1000
+        }
+      },
+      "network_mode": "independent",
+      "shared_bandwidth_mbps": 120,
+      "results_file": "scenarios/lfw-Low-cloud_advantage-n10-s11.json"
+    },
+    {
+      "id": "lfw-Low-reference-n10-s11",
+      "dataset": "lfw",
+      "load": "Low",
+      "network": "reference",
+      "interval_ms": 600.2829383335969,
+      "arrival_rate_per_second": 1.6658810972972669,
+      "reference_node": "Reference Edge CPU: speed=3, FCFS capacity=1",
+      "reference_mean_service_ms": 180.08488150007906,
+      "reference_service_rate_per_second": 5.55293699099089,
+      "reference_offered_cpu_load": 0.3,
+      "classification": "Low rho=0.3; Medium rho=0.9; High rho=1.5 relative to fixed reference Edge CPU, not whole-system utilization",
+      "design_basis": "Aggregate measured service of the predetermined common subset, fixed before any policy output; used only for arrival schedule, never fitted into predictor or supplied per-image to policy",
+      "per_node_compute_demand": {
+        "local": {
+          "mean_service_ms": 540.2546445002372,
+          "all_to_this_node_cpu_rho": 0.8999999999999999
+        },
+        "edge": {
+          "mean_service_ms": 180.08488150007906,
+          "all_to_this_node_cpu_rho": 0.3
+        },
+        "cloud": {
+          "mean_service_ms": 67.53183056252965,
+          "all_to_this_node_cpu_rho": 0.11249999999999999
+        }
+      },
+      "count": 10,
+      "seed": 11,
+      "deadline_ms": 1000,
+      "estimator_id": "5405ea0f82f73f4d37ac9b2c06f3f879c9add4cc60e03465c9d18843e9b19c48",
+      "include_decision_overhead": true,
+      "deadline_policy": "complete_all",
+      "information_mode": "realistic",
+      "nodes": {
+        "local": {
+          "speed": 1,
+          "rtt_ms": 0,
+          "bandwidth_mbps": 1000
+        },
+        "edge": {
+          "speed": 3,
+          "rtt_ms": 20,
+          "bandwidth_mbps": 120
+        },
+        "cloud": {
+          "speed": 8,
+          "rtt_ms": 100,
+          "bandwidth_mbps": 55
+        }
+      },
+      "network_mode": "independent",
+      "shared_bandwidth_mbps": 120,
+      "results_file": "scenarios/lfw-Low-reference-n10-s11.json"
+    },
+    {
+      "id": "lfw-Medium-local_advantage-n10-s11",
+      "dataset": "lfw",
+      "load": "Medium",
+      "network": "local_advantage",
+      "interval_ms": 200.0943127778656,
+      "arrival_rate_per_second": 4.9976432918918015,
+      "reference_node": "Reference Edge CPU: speed=3, FCFS capacity=1",
+      "reference_mean_service_ms": 180.08488150007906,
+      "reference_service_rate_per_second": 5.55293699099089,
+      "reference_offered_cpu_load": 0.9,
+      "classification": "Low rho=0.3; Medium rho=0.9; High rho=1.5 relative to fixed reference Edge CPU, not whole-system utilization",
+      "design_basis": "Aggregate measured service of the predetermined common subset, fixed before any policy output; used only for arrival schedule, never fitted into predictor or supplied per-image to policy",
+      "per_node_compute_demand": {
+        "local": {
+          "mean_service_ms": 540.2546445002372,
+          "all_to_this_node_cpu_rho": 2.7
+        },
+        "edge": {
+          "mean_service_ms": 180.08488150007906,
+          "all_to_this_node_cpu_rho": 0.9
+        },
+        "cloud": {
+          "mean_service_ms": 67.53183056252965,
+          "all_to_this_node_cpu_rho": 0.3375
+        }
+      },
+      "count": 10,
+      "seed": 11,
+      "deadline_ms": 1000,
+      "estimator_id": "5405ea0f82f73f4d37ac9b2c06f3f879c9add4cc60e03465c9d18843e9b19c48",
+      "include_decision_overhead": true,
+      "deadline_policy": "complete_all",
+      "information_mode": "realistic",
+      "nodes": {
+        "local": {
+          "speed": 1,
+          "rtt_ms": 0,
+          "bandwidth_mbps": 1000
+        },
+        "edge": {
+          "speed": 3,
+          "rtt_ms": 1000,
+          "bandwidth_mbps": 1
+        },
+        "cloud": {
+          "speed": 8,
+          "rtt_ms": 2000,
+          "bandwidth_mbps": 0.5
+        }
+      },
+      "network_mode": "independent",
+      "shared_bandwidth_mbps": 120,
+      "results_file": "scenarios/lfw-Medium-local_advantage-n10-s11.json"
+    },
+    {
+      "id": "lfw-Medium-edge_advantage-n10-s11",
+      "dataset": "lfw",
+      "load": "Medium",
+      "network": "edge_advantage",
+      "interval_ms": 200.0943127778656,
+      "arrival_rate_per_second": 4.9976432918918015,
+      "reference_node": "Reference Edge CPU: speed=3, FCFS capacity=1",
+      "reference_mean_service_ms": 180.08488150007906,
+      "reference_service_rate_per_second": 5.55293699099089,
+      "reference_offered_cpu_load": 0.9,
+      "classification": "Low rho=0.3; Medium rho=0.9; High rho=1.5 relative to fixed reference Edge CPU, not whole-system utilization",
+      "design_basis": "Aggregate measured service of the predetermined common subset, fixed before any policy output; used only for arrival schedule, never fitted into predictor or supplied per-image to policy",
+      "per_node_compute_demand": {
+        "local": {
+          "mean_service_ms": 540.2546445002372,
+          "all_to_this_node_cpu_rho": 2.7
+        },
+        "edge": {
+          "mean_service_ms": 90.04244075003953,
+          "all_to_this_node_cpu_rho": 0.45
+        },
+        "cloud": {
+          "mean_service_ms": 67.53183056252965,
+          "all_to_this_node_cpu_rho": 0.3375
+        }
+      },
+      "count": 10,
+      "seed": 11,
+      "deadline_ms": 1000,
+      "estimator_id": "5405ea0f82f73f4d37ac9b2c06f3f879c9add4cc60e03465c9d18843e9b19c48",
+      "include_decision_overhead": true,
+      "deadline_policy": "complete_all",
+      "information_mode": "realistic",
+      "nodes": {
+        "local": {
+          "speed": 1,
+          "rtt_ms": 0,
+          "bandwidth_mbps": 1000
+        },
+        "edge": {
+          "speed": 6,
+          "rtt_ms": 4,
+          "bandwidth_mbps": 1000
+        },
+        "cloud": {
+          "speed": 8,
+          "rtt_ms": 2000,
+          "bandwidth_mbps": 1
+        }
+      },
+      "network_mode": "independent",
+      "shared_bandwidth_mbps": 120,
+      "results_file": "scenarios/lfw-Medium-edge_advantage-n10-s11.json"
+    },
+    {
+      "id": "lfw-Medium-cloud_advantage-n10-s11",
+      "dataset": "lfw",
+      "load": "Medium",
+      "network": "cloud_advantage",
+      "interval_ms": 200.0943127778656,
+      "arrival_rate_per_second": 4.9976432918918015,
+      "reference_node": "Reference Edge CPU: speed=3, FCFS capacity=1",
+      "reference_mean_service_ms": 180.08488150007906,
+      "reference_service_rate_per_second": 5.55293699099089,
+      "reference_offered_cpu_load": 0.9,
+      "classification": "Low rho=0.3; Medium rho=0.9; High rho=1.5 relative to fixed reference Edge CPU, not whole-system utilization",
+      "design_basis": "Aggregate measured service of the predetermined common subset, fixed before any policy output; used only for arrival schedule, never fitted into predictor or supplied per-image to policy",
+      "per_node_compute_demand": {
+        "local": {
+          "mean_service_ms": 540.2546445002372,
+          "all_to_this_node_cpu_rho": 2.7
+        },
+        "edge": {
+          "mean_service_ms": 270.1273222501186,
+          "all_to_this_node_cpu_rho": 1.35
+        },
+        "cloud": {
+          "mean_service_ms": 27.01273222501186,
+          "all_to_this_node_cpu_rho": 0.135
+        }
+      },
+      "count": 10,
+      "seed": 11,
+      "deadline_ms": 1000,
+      "estimator_id": "5405ea0f82f73f4d37ac9b2c06f3f879c9add4cc60e03465c9d18843e9b19c48",
+      "include_decision_overhead": true,
+      "deadline_policy": "complete_all",
+      "information_mode": "realistic",
+      "nodes": {
+        "local": {
+          "speed": 1,
+          "rtt_ms": 0,
+          "bandwidth_mbps": 1000
+        },
+        "edge": {
+          "speed": 2,
+          "rtt_ms": 30,
+          "bandwidth_mbps": 80
+        },
+        "cloud": {
+          "speed": 20,
+          "rtt_ms": 2,
+          "bandwidth_mbps": 1000
+        }
+      },
+      "network_mode": "independent",
+      "shared_bandwidth_mbps": 120,
+      "results_file": "scenarios/lfw-Medium-cloud_advantage-n10-s11.json"
+    },
+    {
+      "id": "lfw-Medium-reference-n10-s11",
+      "dataset": "lfw",
+      "load": "Medium",
+      "network": "reference",
+      "interval_ms": 200.0943127778656,
+      "arrival_rate_per_second": 4.9976432918918015,
+      "reference_node": "Reference Edge CPU: speed=3, FCFS capacity=1",
+      "reference_mean_service_ms": 180.08488150007906,
+      "reference_service_rate_per_second": 5.55293699099089,
+      "reference_offered_cpu_load": 0.9,
+      "classification": "Low rho=0.3; Medium rho=0.9; High rho=1.5 relative to fixed reference Edge CPU, not whole-system utilization",
+      "design_basis": "Aggregate measured service of the predetermined common subset, fixed before any policy output; used only for arrival schedule, never fitted into predictor or supplied per-image to policy",
+      "per_node_compute_demand": {
+        "local": {
+          "mean_service_ms": 540.2546445002372,
+          "all_to_this_node_cpu_rho": 2.7
+        },
+        "edge": {
+          "mean_service_ms": 180.08488150007906,
+          "all_to_this_node_cpu_rho": 0.9
+        },
+        "cloud": {
+          "mean_service_ms": 67.53183056252965,
+          "all_to_this_node_cpu_rho": 0.3375
+        }
+      },
+      "count": 10,
+      "seed": 11,
+      "deadline_ms": 1000,
+      "estimator_id": "5405ea0f82f73f4d37ac9b2c06f3f879c9add4cc60e03465c9d18843e9b19c48",
+      "include_decision_overhead": true,
+      "deadline_policy": "complete_all",
+      "information_mode": "realistic",
+      "nodes": {
+        "local": {
+          "speed": 1,
+          "rtt_ms": 0,
+          "bandwidth_mbps": 1000
+        },
+        "edge": {
+          "speed": 3,
+          "rtt_ms": 20,
+          "bandwidth_mbps": 120
+        },
+        "cloud": {
+          "speed": 8,
+          "rtt_ms": 100,
+          "bandwidth_mbps": 55
+        }
+      },
+      "network_mode": "independent",
+      "shared_bandwidth_mbps": 120,
+      "results_file": "scenarios/lfw-Medium-reference-n10-s11.json"
+    },
+    {
+      "id": "lfw-High-local_advantage-n10-s11",
+      "dataset": "lfw",
+      "load": "High",
+      "network": "local_advantage",
+      "interval_ms": 120.05658766671938,
+      "arrival_rate_per_second": 8.329405486486335,
+      "reference_node": "Reference Edge CPU: speed=3, FCFS capacity=1",
+      "reference_mean_service_ms": 180.08488150007906,
+      "reference_service_rate_per_second": 5.55293699099089,
+      "reference_offered_cpu_load": 1.5,
+      "classification": "Low rho=0.3; Medium rho=0.9; High rho=1.5 relative to fixed reference Edge CPU, not whole-system utilization",
+      "design_basis": "Aggregate measured service of the predetermined common subset, fixed before any policy output; used only for arrival schedule, never fitted into predictor or supplied per-image to policy",
+      "per_node_compute_demand": {
+        "local": {
+          "mean_service_ms": 540.2546445002372,
+          "all_to_this_node_cpu_rho": 4.5
+        },
+        "edge": {
+          "mean_service_ms": 180.08488150007906,
+          "all_to_this_node_cpu_rho": 1.5
+        },
+        "cloud": {
+          "mean_service_ms": 67.53183056252965,
+          "all_to_this_node_cpu_rho": 0.5625
+        }
+      },
+      "count": 10,
+      "seed": 11,
+      "deadline_ms": 1000,
+      "estimator_id": "5405ea0f82f73f4d37ac9b2c06f3f879c9add4cc60e03465c9d18843e9b19c48",
+      "include_decision_overhead": true,
+      "deadline_policy": "complete_all",
+      "information_mode": "realistic",
+      "nodes": {
+        "local": {
+          "speed": 1,
+          "rtt_ms": 0,
+          "bandwidth_mbps": 1000
+        },
+        "edge": {
+          "speed": 3,
+          "rtt_ms": 1000,
+          "bandwidth_mbps": 1
+        },
+        "cloud": {
+          "speed": 8,
+          "rtt_ms": 2000,
+          "bandwidth_mbps": 0.5
+        }
+      },
+      "network_mode": "independent",
+      "shared_bandwidth_mbps": 120,
+      "results_file": "scenarios/lfw-High-local_advantage-n10-s11.json"
+    },
+    {
+      "id": "lfw-High-edge_advantage-n10-s11",
+      "dataset": "lfw",
+      "load": "High",
+      "network": "edge_advantage",
+      "interval_ms": 120.05658766671938,
+      "arrival_rate_per_second": 8.329405486486335,
+      "reference_node": "Reference Edge CPU: speed=3, FCFS capacity=1",
+      "reference_mean_service_ms": 180.08488150007906,
+      "reference_service_rate_per_second": 5.55293699099089,
+      "reference_offered_cpu_load": 1.5,
+      "classification": "Low rho=0.3; Medium rho=0.9; High rho=1.5 relative to fixed reference Edge CPU, not whole-system utilization",
+      "design_basis": "Aggregate measured service of the predetermined common subset, fixed before any policy output; used only for arrival schedule, never fitted into predictor or supplied per-image to policy",
+      "per_node_compute_demand": {
+        "local": {
+          "mean_service_ms": 540.2546445002372,
+          "all_to_this_node_cpu_rho": 4.5
+        },
+        "edge": {
+          "mean_service_ms": 90.04244075003953,
+          "all_to_this_node_cpu_rho": 0.75
+        },
+        "cloud": {
+          "mean_service_ms": 67.53183056252965,
+          "all_to_this_node_cpu_rho": 0.5625
+        }
+      },
+      "count": 10,
+      "seed": 11,
+      "deadline_ms": 1000,
+      "estimator_id": "5405ea0f82f73f4d37ac9b2c06f3f879c9add4cc60e03465c9d18843e9b19c48",
+      "include_decision_overhead": true,
+      "deadline_policy": "complete_all",
+      "information_mode": "realistic",
+      "nodes": {
+        "local": {
+          "speed": 1,
+          "rtt_ms": 0,
+          "bandwidth_mbps": 1000
+        },
+        "edge": {
+          "speed": 6,
+          "rtt_ms": 4,
+          "bandwidth_mbps": 1000
+        },
+        "cloud": {
+          "speed": 8,
+          "rtt_ms": 2000,
+          "bandwidth_mbps": 1
+        }
+      },
+      "network_mode": "independent",
+      "shared_bandwidth_mbps": 120,
+      "results_file": "scenarios/lfw-High-edge_advantage-n10-s11.json"
+    },
+    {
+      "id": "lfw-High-cloud_advantage-n10-s11",
+      "dataset": "lfw",
+      "load": "High",
+      "network": "cloud_advantage",
+      "interval_ms": 120.05658766671938,
+      "arrival_rate_per_second": 8.329405486486335,
+      "reference_node": "Reference Edge CPU: speed=3, FCFS capacity=1",
+      "reference_mean_service_ms": 180.08488150007906,
+      "reference_service_rate_per_second": 5.55293699099089,
+      "reference_offered_cpu_load": 1.5,
+      "classification": "Low rho=0.3; Medium rho=0.9; High rho=1.5 relative to fixed reference Edge CPU, not whole-system utilization",
+      "design_basis": "Aggregate measured service of the predetermined common subset, fixed before any policy output; used only for arrival schedule, never fitted into predictor or supplied per-image to policy",
+      "per_node_compute_demand": {
+        "local": {
+          "mean_service_ms": 540.2546445002372,
+          "all_to_this_node_cpu_rho": 4.5
+        },
+        "edge": {
+          "mean_service_ms": 270.1273222501186,
+          "all_to_this_node_cpu_rho": 2.25
+        },
+        "cloud": {
+          "mean_service_ms": 27.01273222501186,
+          "all_to_this_node_cpu_rho": 0.22499999999999998
+        }
+      },
+      "count": 10,
+      "seed": 11,
+      "deadline_ms": 1000,
+      "estimator_id": "5405ea0f82f73f4d37ac9b2c06f3f879c9add4cc60e03465c9d18843e9b19c48",
+      "include_decision_overhead": true,
+      "deadline_policy": "complete_all",
+      "information_mode": "realistic",
+      "nodes": {
+        "local": {
+          "speed": 1,
+          "rtt_ms": 0,
+          "bandwidth_mbps": 1000
+        },
+        "edge": {
+          "speed": 2,
+          "rtt_ms": 30,
+          "bandwidth_mbps": 80
+        },
+        "cloud": {
+          "speed": 20,
+          "rtt_ms": 2,
+          "bandwidth_mbps": 1000
+        }
+      },
+      "network_mode": "independent",
+      "shared_bandwidth_mbps": 120,
+      "results_file": "scenarios/lfw-High-cloud_advantage-n10-s11.json"
+    },
+    {
+      "id": "lfw-High-reference-n10-s11",
+      "dataset": "lfw",
+      "load": "High",
+      "network": "reference",
+      "interval_ms": 120.05658766671938,
+      "arrival_rate_per_second": 8.329405486486335,
+      "reference_node": "Reference Edge CPU: speed=3, FCFS capacity=1",
+      "reference_mean_service_ms": 180.08488150007906,
+      "reference_service_rate_per_second": 5.55293699099089,
+      "reference_offered_cpu_load": 1.5,
+      "classification": "Low rho=0.3; Medium rho=0.9; High rho=1.5 relative to fixed reference Edge CPU, not whole-system utilization",
+      "design_basis": "Aggregate measured service of the predetermined common subset, fixed before any policy output; used only for arrival schedule, never fitted into predictor or supplied per-image to policy",
+      "per_node_compute_demand": {
+        "local": {
+          "mean_service_ms": 540.2546445002372,
+          "all_to_this_node_cpu_rho": 4.5
+        },
+        "edge": {
+          "mean_service_ms": 180.08488150007906,
+          "all_to_this_node_cpu_rho": 1.5
+        },
+        "cloud": {
+          "mean_service_ms": 67.53183056252965,
+          "all_to_this_node_cpu_rho": 0.5625
+        }
+      },
+      "count": 10,
+      "seed": 11,
+      "deadline_ms": 1000,
+      "estimator_id": "5405ea0f82f73f4d37ac9b2c06f3f879c9add4cc60e03465c9d18843e9b19c48",
+      "include_decision_overhead": true,
+      "deadline_policy": "complete_all",
+      "information_mode": "realistic",
+      "nodes": {
+        "local": {
+          "speed": 1,
+          "rtt_ms": 0,
+          "bandwidth_mbps": 1000
+        },
+        "edge": {
+          "speed": 3,
+          "rtt_ms": 20,
+          "bandwidth_mbps": 120
+        },
+        "cloud": {
+          "speed": 8,
+          "rtt_ms": 100,
+          "bandwidth_mbps": 55
+        }
+      },
+      "network_mode": "independent",
+      "shared_bandwidth_mbps": 120,
+      "results_file": "scenarios/lfw-High-reference-n10-s11.json"
+    },
+    {
+      "id": "wider_train-Low-local_advantage-n10-s11",
+      "dataset": "wider_train",
+      "load": "Low",
+      "network": "local_advantage",
+      "interval_ms": 1333.0059918892707,
+      "arrival_rate_per_second": 0.7501841747783137,
+      "reference_node": "Reference Edge CPU: speed=3, FCFS capacity=1",
+      "reference_mean_service_ms": 399.90179756678117,
+      "reference_service_rate_per_second": 2.5006139159277123,
+      "reference_offered_cpu_load": 0.3,
+      "classification": "Low rho=0.3; Medium rho=0.9; High rho=1.5 relative to fixed reference Edge CPU, not whole-system utilization",
+      "design_basis": "Aggregate measured service of the predetermined common subset, fixed before any policy output; used only for arrival schedule, never fitted into predictor or supplied per-image to policy",
+      "per_node_compute_demand": {
+        "local": {
+          "mean_service_ms": 1199.7053927003435,
+          "all_to_this_node_cpu_rho": 0.8999999999999999
+        },
+        "edge": {
+          "mean_service_ms": 399.90179756678117,
+          "all_to_this_node_cpu_rho": 0.3
+        },
+        "cloud": {
+          "mean_service_ms": 149.96317408754294,
+          "all_to_this_node_cpu_rho": 0.11249999999999999
+        }
+      },
+      "count": 10,
+      "seed": 11,
+      "deadline_ms": 1000,
+      "estimator_id": "5405ea0f82f73f4d37ac9b2c06f3f879c9add4cc60e03465c9d18843e9b19c48",
+      "include_decision_overhead": true,
+      "deadline_policy": "complete_all",
+      "information_mode": "realistic",
+      "nodes": {
+        "local": {
+          "speed": 1,
+          "rtt_ms": 0,
+          "bandwidth_mbps": 1000
+        },
+        "edge": {
+          "speed": 3,
+          "rtt_ms": 1000,
+          "bandwidth_mbps": 1
+        },
+        "cloud": {
+          "speed": 8,
+          "rtt_ms": 2000,
+          "bandwidth_mbps": 0.5
+        }
+      },
+      "network_mode": "independent",
+      "shared_bandwidth_mbps": 120,
+      "results_file": "scenarios/wider_train-Low-local_advantage-n10-s11.json"
+    },
+    {
+      "id": "wider_train-Low-edge_advantage-n10-s11",
+      "dataset": "wider_train",
+      "load": "Low",
+      "network": "edge_advantage",
+      "interval_ms": 1333.0059918892707,
+      "arrival_rate_per_second": 0.7501841747783137,
+      "reference_node": "Reference Edge CPU: speed=3, FCFS capacity=1",
+      "reference_mean_service_ms": 399.90179756678117,
+      "reference_service_rate_per_second": 2.5006139159277123,
+      "reference_offered_cpu_load": 0.3,
+      "classification": "Low rho=0.3; Medium rho=0.9; High rho=1.5 relative to fixed reference Edge CPU, not whole-system utilization",
+      "design_basis": "Aggregate measured service of the predetermined common subset, fixed before any policy output; used only for arrival schedule, never fitted into predictor or supplied per-image to policy",
+      "per_node_compute_demand": {
+        "local": {
+          "mean_service_ms": 1199.7053927003435,
+          "all_to_this_node_cpu_rho": 0.8999999999999999
+        },
+        "edge": {
+          "mean_service_ms": 199.95089878339058,
+          "all_to_this_node_cpu_rho": 0.15
+        },
+        "cloud": {
+          "mean_service_ms": 149.96317408754294,
+          "all_to_this_node_cpu_rho": 0.11249999999999999
+        }
+      },
+      "count": 10,
+      "seed": 11,
+      "deadline_ms": 1000,
+      "estimator_id": "5405ea0f82f73f4d37ac9b2c06f3f879c9add4cc60e03465c9d18843e9b19c48",
+      "include_decision_overhead": true,
+      "deadline_policy": "complete_all",
+      "information_mode": "realistic",
+      "nodes": {
+        "local": {
+          "speed": 1,
+          "rtt_ms": 0,
+          "bandwidth_mbps": 1000
+        },
+        "edge": {
+          "speed": 6,
+          "rtt_ms": 4,
+          "bandwidth_mbps": 1000
+        },
+        "cloud": {
+          "speed": 8,
+          "rtt_ms": 2000,
+          "bandwidth_mbps": 1
+        }
+      },
+      "network_mode": "independent",
+      "shared_bandwidth_mbps": 120,
+      "results_file": "scenarios/wider_train-Low-edge_advantage-n10-s11.json"
+    },
+    {
+      "id": "wider_train-Low-cloud_advantage-n10-s11",
+      "dataset": "wider_train",
+      "load": "Low",
+      "network": "cloud_advantage",
+      "interval_ms": 1333.0059918892707,
+      "arrival_rate_per_second": 0.7501841747783137,
+      "reference_node": "Reference Edge CPU: speed=3, FCFS capacity=1",
+      "reference_mean_service_ms": 399.90179756678117,
+      "reference_service_rate_per_second": 2.5006139159277123,
+      "reference_offered_cpu_load": 0.3,
+      "classification": "Low rho=0.3; Medium rho=0.9; High rho=1.5 relative to fixed reference Edge CPU, not whole-system utilization",
+      "design_basis": "Aggregate measured service of the predetermined common subset, fixed before any policy output; used only for arrival schedule, never fitted into predictor or supplied per-image to policy",
+      "per_node_compute_demand": {
+        "local": {
+          "mean_service_ms": 1199.7053927003435,
+          "all_to_this_node_cpu_rho": 0.8999999999999999
+        },
+        "edge": {
+          "mean_service_ms": 599.8526963501718,
+          "all_to_this_node_cpu_rho": 0.44999999999999996
+        },
+        "cloud": {
+          "mean_service_ms": 59.985269635017175,
+          "all_to_this_node_cpu_rho": 0.045
+        }
+      },
+      "count": 10,
+      "seed": 11,
+      "deadline_ms": 1000,
+      "estimator_id": "5405ea0f82f73f4d37ac9b2c06f3f879c9add4cc60e03465c9d18843e9b19c48",
+      "include_decision_overhead": true,
+      "deadline_policy": "complete_all",
+      "information_mode": "realistic",
+      "nodes": {
+        "local": {
+          "speed": 1,
+          "rtt_ms": 0,
+          "bandwidth_mbps": 1000
+        },
+        "edge": {
+          "speed": 2,
+          "rtt_ms": 30,
+          "bandwidth_mbps": 80
+        },
+        "cloud": {
+          "speed": 20,
+          "rtt_ms": 2,
+          "bandwidth_mbps": 1000
+        }
+      },
+      "network_mode": "independent",
+      "shared_bandwidth_mbps": 120,
+      "results_file": "scenarios/wider_train-Low-cloud_advantage-n10-s11.json"
+    },
+    {
+      "id": "wider_train-Low-reference-n10-s11",
+      "dataset": "wider_train",
+      "load": "Low",
+      "network": "reference",
+      "interval_ms": 1333.0059918892707,
+      "arrival_rate_per_second": 0.7501841747783137,
+      "reference_node": "Reference Edge CPU: speed=3, FCFS capacity=1",
+      "reference_mean_service_ms": 399.90179756678117,
+      "reference_service_rate_per_second": 2.5006139159277123,
+      "reference_offered_cpu_load": 0.3,
+      "classification": "Low rho=0.3; Medium rho=0.9; High rho=1.5 relative to fixed reference Edge CPU, not whole-system utilization",
+      "design_basis": "Aggregate measured service of the predetermined common subset, fixed before any policy output; used only for arrival schedule, never fitted into predictor or supplied per-image to policy",
+      "per_node_compute_demand": {
+        "local": {
+          "mean_service_ms": 1199.7053927003435,
+          "all_to_this_node_cpu_rho": 0.8999999999999999
+        },
+        "edge": {
+          "mean_service_ms": 399.90179756678117,
+          "all_to_this_node_cpu_rho": 0.3
+        },
+        "cloud": {
+          "mean_service_ms": 149.96317408754294,
+          "all_to_this_node_cpu_rho": 0.11249999999999999
+        }
+      },
+      "count": 10,
+      "seed": 11,
+      "deadline_ms": 1000,
+      "estimator_id": "5405ea0f82f73f4d37ac9b2c06f3f879c9add4cc60e03465c9d18843e9b19c48",
+      "include_decision_overhead": true,
+      "deadline_policy": "complete_all",
+      "information_mode": "realistic",
+      "nodes": {
+        "local": {
+          "speed": 1,
+          "rtt_ms": 0,
+          "bandwidth_mbps": 1000
+        },
+        "edge": {
+          "speed": 3,
+          "rtt_ms": 20,
+          "bandwidth_mbps": 120
+        },
+        "cloud": {
+          "speed": 8,
+          "rtt_ms": 100,
+          "bandwidth_mbps": 55
+        }
+      },
+      "network_mode": "independent",
+      "shared_bandwidth_mbps": 120,
+      "results_file": "scenarios/wider_train-Low-reference-n10-s11.json"
+    },
+    {
+      "id": "wider_train-Medium-local_advantage-n10-s11",
+      "dataset": "wider_train",
+      "load": "Medium",
+      "network": "local_advantage",
+      "interval_ms": 444.33533062975687,
+      "arrival_rate_per_second": 2.250552524334941,
+      "reference_node": "Reference Edge CPU: speed=3, FCFS capacity=1",
+      "reference_mean_service_ms": 399.90179756678117,
+      "reference_service_rate_per_second": 2.5006139159277123,
+      "reference_offered_cpu_load": 0.9,
+      "classification": "Low rho=0.3; Medium rho=0.9; High rho=1.5 relative to fixed reference Edge CPU, not whole-system utilization",
+      "design_basis": "Aggregate measured service of the predetermined common subset, fixed before any policy output; used only for arrival schedule, never fitted into predictor or supplied per-image to policy",
+      "per_node_compute_demand": {
+        "local": {
+          "mean_service_ms": 1199.7053927003435,
+          "all_to_this_node_cpu_rho": 2.6999999999999997
+        },
+        "edge": {
+          "mean_service_ms": 399.90179756678117,
+          "all_to_this_node_cpu_rho": 0.9
+        },
+        "cloud": {
+          "mean_service_ms": 149.96317408754294,
+          "all_to_this_node_cpu_rho": 0.33749999999999997
+        }
+      },
+      "count": 10,
+      "seed": 11,
+      "deadline_ms": 1000,
+      "estimator_id": "5405ea0f82f73f4d37ac9b2c06f3f879c9add4cc60e03465c9d18843e9b19c48",
+      "include_decision_overhead": true,
+      "deadline_policy": "complete_all",
+      "information_mode": "realistic",
+      "nodes": {
+        "local": {
+          "speed": 1,
+          "rtt_ms": 0,
+          "bandwidth_mbps": 1000
+        },
+        "edge": {
+          "speed": 3,
+          "rtt_ms": 1000,
+          "bandwidth_mbps": 1
+        },
+        "cloud": {
+          "speed": 8,
+          "rtt_ms": 2000,
+          "bandwidth_mbps": 0.5
+        }
+      },
+      "network_mode": "independent",
+      "shared_bandwidth_mbps": 120,
+      "results_file": "scenarios/wider_train-Medium-local_advantage-n10-s11.json"
+    },
+    {
+      "id": "wider_train-Medium-edge_advantage-n10-s11",
+      "dataset": "wider_train",
+      "load": "Medium",
+      "network": "edge_advantage",
+      "interval_ms": 444.33533062975687,
+      "arrival_rate_per_second": 2.250552524334941,
+      "reference_node": "Reference Edge CPU: speed=3, FCFS capacity=1",
+      "reference_mean_service_ms": 399.90179756678117,
+      "reference_service_rate_per_second": 2.5006139159277123,
+      "reference_offered_cpu_load": 0.9,
+      "classification": "Low rho=0.3; Medium rho=0.9; High rho=1.5 relative to fixed reference Edge CPU, not whole-system utilization",
+      "design_basis": "Aggregate measured service of the predetermined common subset, fixed before any policy output; used only for arrival schedule, never fitted into predictor or supplied per-image to policy",
+      "per_node_compute_demand": {
+        "local": {
+          "mean_service_ms": 1199.7053927003435,
+          "all_to_this_node_cpu_rho": 2.6999999999999997
+        },
+        "edge": {
+          "mean_service_ms": 199.95089878339058,
+          "all_to_this_node_cpu_rho": 0.45
+        },
+        "cloud": {
+          "mean_service_ms": 149.96317408754294,
+          "all_to_this_node_cpu_rho": 0.33749999999999997
+        }
+      },
+      "count": 10,
+      "seed": 11,
+      "deadline_ms": 1000,
+      "estimator_id": "5405ea0f82f73f4d37ac9b2c06f3f879c9add4cc60e03465c9d18843e9b19c48",
+      "include_decision_overhead": true,
+      "deadline_policy": "complete_all",
+      "information_mode": "realistic",
+      "nodes": {
+        "local": {
+          "speed": 1,
+          "rtt_ms": 0,
+          "bandwidth_mbps": 1000
+        },
+        "edge": {
+          "speed": 6,
+          "rtt_ms": 4,
+          "bandwidth_mbps": 1000
+        },
+        "cloud": {
+          "speed": 8,
+          "rtt_ms": 2000,
+          "bandwidth_mbps": 1
+        }
+      },
+      "network_mode": "independent",
+      "shared_bandwidth_mbps": 120,
+      "results_file": "scenarios/wider_train-Medium-edge_advantage-n10-s11.json"
+    },
+    {
+      "id": "wider_train-Medium-cloud_advantage-n10-s11",
+      "dataset": "wider_train",
+      "load": "Medium",
+      "network": "cloud_advantage",
+      "interval_ms": 444.33533062975687,
+      "arrival_rate_per_second": 2.250552524334941,
+      "reference_node": "Reference Edge CPU: speed=3, FCFS capacity=1",
+      "reference_mean_service_ms": 399.90179756678117,
+      "reference_service_rate_per_second": 2.5006139159277123,
+      "reference_offered_cpu_load": 0.9,
+      "classification": "Low rho=0.3; Medium rho=0.9; High rho=1.5 relative to fixed reference Edge CPU, not whole-system utilization",
+      "design_basis": "Aggregate measured service of the predetermined common subset, fixed before any policy output; used only for arrival schedule, never fitted into predictor or supplied per-image to policy",
+      "per_node_compute_demand": {
+        "local": {
+          "mean_service_ms": 1199.7053927003435,
+          "all_to_this_node_cpu_rho": 2.6999999999999997
+        },
+        "edge": {
+          "mean_service_ms": 599.8526963501718,
+          "all_to_this_node_cpu_rho": 1.3499999999999999
+        },
+        "cloud": {
+          "mean_service_ms": 59.985269635017175,
+          "all_to_this_node_cpu_rho": 0.135
+        }
+      },
+      "count": 10,
+      "seed": 11,
+      "deadline_ms": 1000,
+      "estimator_id": "5405ea0f82f73f4d37ac9b2c06f3f879c9add4cc60e03465c9d18843e9b19c48",
+      "include_decision_overhead": true,
+      "deadline_policy": "complete_all",
+      "information_mode": "realistic",
+      "nodes": {
+        "local": {
+          "speed": 1,
+          "rtt_ms": 0,
+          "bandwidth_mbps": 1000
+        },
+        "edge": {
+          "speed": 2,
+          "rtt_ms": 30,
+          "bandwidth_mbps": 80
+        },
+        "cloud": {
+          "speed": 20,
+          "rtt_ms": 2,
+          "bandwidth_mbps": 1000
+        }
+      },
+      "network_mode": "independent",
+      "shared_bandwidth_mbps": 120,
+      "results_file": "scenarios/wider_train-Medium-cloud_advantage-n10-s11.json"
+    },
+    {
+      "id": "wider_train-Medium-reference-n10-s11",
+      "dataset": "wider_train",
+      "load": "Medium",
+      "network": "reference",
+      "interval_ms": 444.33533062975687,
+      "arrival_rate_per_second": 2.250552524334941,
+      "reference_node": "Reference Edge CPU: speed=3, FCFS capacity=1",
+      "reference_mean_service_ms": 399.90179756678117,
+      "reference_service_rate_per_second": 2.5006139159277123,
+      "reference_offered_cpu_load": 0.9,
+      "classification": "Low rho=0.3; Medium rho=0.9; High rho=1.5 relative to fixed reference Edge CPU, not whole-system utilization",
+      "design_basis": "Aggregate measured service of the predetermined common subset, fixed before any policy output; used only for arrival schedule, never fitted into predictor or supplied per-image to policy",
+      "per_node_compute_demand": {
+        "local": {
+          "mean_service_ms": 1199.7053927003435,
+          "all_to_this_node_cpu_rho": 2.6999999999999997
+        },
+        "edge": {
+          "mean_service_ms": 399.90179756678117,
+          "all_to_this_node_cpu_rho": 0.9
+        },
+        "cloud": {
+          "mean_service_ms": 149.96317408754294,
+          "all_to_this_node_cpu_rho": 0.33749999999999997
+        }
+      },
+      "count": 10,
+      "seed": 11,
+      "deadline_ms": 1000,
+      "estimator_id": "5405ea0f82f73f4d37ac9b2c06f3f879c9add4cc60e03465c9d18843e9b19c48",
+      "include_decision_overhead": true,
+      "deadline_policy": "complete_all",
+      "information_mode": "realistic",
+      "nodes": {
+        "local": {
+          "speed": 1,
+          "rtt_ms": 0,
+          "bandwidth_mbps": 1000
+        },
+        "edge": {
+          "speed": 3,
+          "rtt_ms": 20,
+          "bandwidth_mbps": 120
+        },
+        "cloud": {
+          "speed": 8,
+          "rtt_ms": 100,
+          "bandwidth_mbps": 55
+        }
+      },
+      "network_mode": "independent",
+      "shared_bandwidth_mbps": 120,
+      "results_file": "scenarios/wider_train-Medium-reference-n10-s11.json"
+    },
+    {
+      "id": "wider_train-High-local_advantage-n10-s11",
+      "dataset": "wider_train",
+      "load": "High",
+      "network": "local_advantage",
+      "interval_ms": 266.60119837785413,
+      "arrival_rate_per_second": 3.7509208738915683,
+      "reference_node": "Reference Edge CPU: speed=3, FCFS capacity=1",
+      "reference_mean_service_ms": 399.90179756678117,
+      "reference_service_rate_per_second": 2.5006139159277123,
+      "reference_offered_cpu_load": 1.5,
+      "classification": "Low rho=0.3; Medium rho=0.9; High rho=1.5 relative to fixed reference Edge CPU, not whole-system utilization",
+      "design_basis": "Aggregate measured service of the predetermined common subset, fixed before any policy output; used only for arrival schedule, never fitted into predictor or supplied per-image to policy",
+      "per_node_compute_demand": {
+        "local": {
+          "mean_service_ms": 1199.7053927003435,
+          "all_to_this_node_cpu_rho": 4.5
+        },
+        "edge": {
+          "mean_service_ms": 399.90179756678117,
+          "all_to_this_node_cpu_rho": 1.5
+        },
+        "cloud": {
+          "mean_service_ms": 149.96317408754294,
+          "all_to_this_node_cpu_rho": 0.5625
+        }
+      },
+      "count": 10,
+      "seed": 11,
+      "deadline_ms": 1000,
+      "estimator_id": "5405ea0f82f73f4d37ac9b2c06f3f879c9add4cc60e03465c9d18843e9b19c48",
+      "include_decision_overhead": true,
+      "deadline_policy": "complete_all",
+      "information_mode": "realistic",
+      "nodes": {
+        "local": {
+          "speed": 1,
+          "rtt_ms": 0,
+          "bandwidth_mbps": 1000
+        },
+        "edge": {
+          "speed": 3,
+          "rtt_ms": 1000,
+          "bandwidth_mbps": 1
+        },
+        "cloud": {
+          "speed": 8,
+          "rtt_ms": 2000,
+          "bandwidth_mbps": 0.5
+        }
+      },
+      "network_mode": "independent",
+      "shared_bandwidth_mbps": 120,
+      "results_file": "scenarios/wider_train-High-local_advantage-n10-s11.json"
+    },
+    {
+      "id": "wider_train-High-edge_advantage-n10-s11",
+      "dataset": "wider_train",
+      "load": "High",
+      "network": "edge_advantage",
+      "interval_ms": 266.60119837785413,
+      "arrival_rate_per_second": 3.7509208738915683,
+      "reference_node": "Reference Edge CPU: speed=3, FCFS capacity=1",
+      "reference_mean_service_ms": 399.90179756678117,
+      "reference_service_rate_per_second": 2.5006139159277123,
+      "reference_offered_cpu_load": 1.5,
+      "classification": "Low rho=0.3; Medium rho=0.9; High rho=1.5 relative to fixed reference Edge CPU, not whole-system utilization",
+      "design_basis": "Aggregate measured service of the predetermined common subset, fixed before any policy output; used only for arrival schedule, never fitted into predictor or supplied per-image to policy",
+      "per_node_compute_demand": {
+        "local": {
+          "mean_service_ms": 1199.7053927003435,
+          "all_to_this_node_cpu_rho": 4.5
+        },
+        "edge": {
+          "mean_service_ms": 199.95089878339058,
+          "all_to_this_node_cpu_rho": 0.75
+        },
+        "cloud": {
+          "mean_service_ms": 149.96317408754294,
+          "all_to_this_node_cpu_rho": 0.5625
+        }
+      },
+      "count": 10,
+      "seed": 11,
+      "deadline_ms": 1000,
+      "estimator_id": "5405ea0f82f73f4d37ac9b2c06f3f879c9add4cc60e03465c9d18843e9b19c48",
+      "include_decision_overhead": true,
+      "deadline_policy": "complete_all",
+      "information_mode": "realistic",
+      "nodes": {
+        "local": {
+          "speed": 1,
+          "rtt_ms": 0,
+          "bandwidth_mbps": 1000
+        },
+        "edge": {
+          "speed": 6,
+          "rtt_ms": 4,
+          "bandwidth_mbps": 1000
+        },
+        "cloud": {
+          "speed": 8,
+          "rtt_ms": 2000,
+          "bandwidth_mbps": 1
+        }
+      },
+      "network_mode": "independent",
+      "shared_bandwidth_mbps": 120,
+      "results_file": "scenarios/wider_train-High-edge_advantage-n10-s11.json"
+    },
+    {
+      "id": "wider_train-High-cloud_advantage-n10-s11",
+      "dataset": "wider_train",
+      "load": "High",
+      "network": "cloud_advantage",
+      "interval_ms": 266.60119837785413,
+      "arrival_rate_per_second": 3.7509208738915683,
+      "reference_node": "Reference Edge CPU: speed=3, FCFS capacity=1",
+      "reference_mean_service_ms": 399.90179756678117,
+      "reference_service_rate_per_second": 2.5006139159277123,
+      "reference_offered_cpu_load": 1.5,
+      "classification": "Low rho=0.3; Medium rho=0.9; High rho=1.5 relative to fixed reference Edge CPU, not whole-system utilization",
+      "design_basis": "Aggregate measured service of the predetermined common subset, fixed before any policy output; used only for arrival schedule, never fitted into predictor or supplied per-image to policy",
+      "per_node_compute_demand": {
+        "local": {
+          "mean_service_ms": 1199.7053927003435,
+          "all_to_this_node_cpu_rho": 4.5
+        },
+        "edge": {
+          "mean_service_ms": 599.8526963501718,
+          "all_to_this_node_cpu_rho": 2.25
+        },
+        "cloud": {
+          "mean_service_ms": 59.985269635017175,
+          "all_to_this_node_cpu_rho": 0.22499999999999998
+        }
+      },
+      "count": 10,
+      "seed": 11,
+      "deadline_ms": 1000,
+      "estimator_id": "5405ea0f82f73f4d37ac9b2c06f3f879c9add4cc60e03465c9d18843e9b19c48",
+      "include_decision_overhead": true,
+      "deadline_policy": "complete_all",
+      "information_mode": "realistic",
+      "nodes": {
+        "local": {
+          "speed": 1,
+          "rtt_ms": 0,
+          "bandwidth_mbps": 1000
+        },
+        "edge": {
+          "speed": 2,
+          "rtt_ms": 30,
+          "bandwidth_mbps": 80
+        },
+        "cloud": {
+          "speed": 20,
+          "rtt_ms": 2,
+          "bandwidth_mbps": 1000
+        }
+      },
+      "network_mode": "independent",
+      "shared_bandwidth_mbps": 120,
+      "results_file": "scenarios/wider_train-High-cloud_advantage-n10-s11.json"
+    },
+    {
+      "id": "wider_train-High-reference-n10-s11",
+      "dataset": "wider_train",
+      "load": "High",
+      "network": "reference",
+      "interval_ms": 266.60119837785413,
+      "arrival_rate_per_second": 3.7509208738915683,
+      "reference_node": "Reference Edge CPU: speed=3, FCFS capacity=1",
+      "reference_mean_service_ms": 399.90179756678117,
+      "reference_service_rate_per_second": 2.5006139159277123,
+      "reference_offered_cpu_load": 1.5,
+      "classification": "Low rho=0.3; Medium rho=0.9; High rho=1.5 relative to fixed reference Edge CPU, not whole-system utilization",
+      "design_basis": "Aggregate measured service of the predetermined common subset, fixed before any policy output; used only for arrival schedule, never fitted into predictor or supplied per-image to policy",
+      "per_node_compute_demand": {
+        "local": {
+          "mean_service_ms": 1199.7053927003435,
+          "all_to_this_node_cpu_rho": 4.5
+        },
+        "edge": {
+          "mean_service_ms": 399.90179756678117,
+          "all_to_this_node_cpu_rho": 1.5
+        },
+        "cloud": {
+          "mean_service_ms": 149.96317408754294,
+          "all_to_this_node_cpu_rho": 0.5625
+        }
+      },
+      "count": 10,
+      "seed": 11,
+      "deadline_ms": 1000,
+      "estimator_id": "5405ea0f82f73f4d37ac9b2c06f3f879c9add4cc60e03465c9d18843e9b19c48",
+      "include_decision_overhead": true,
+      "deadline_policy": "complete_all",
+      "information_mode": "realistic",
+      "nodes": {
+        "local": {
+          "speed": 1,
+          "rtt_ms": 0,
+          "bandwidth_mbps": 1000
+        },
+        "edge": {
+          "speed": 3,
+          "rtt_ms": 20,
+          "bandwidth_mbps": 120
+        },
+        "cloud": {
+          "speed": 8,
+          "rtt_ms": 100,
+          "bandwidth_mbps": 55
+        }
+      },
+      "network_mode": "independent",
+      "shared_bandwidth_mbps": 120,
+      "results_file": "scenarios/wider_train-High-reference-n10-s11.json"
+    }
+  ],
+  "blocked": [
+    "dqn",
+    "ddqn"
+  ],
+  "replay": false
+}

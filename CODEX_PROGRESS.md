@@ -1,3 +1,42 @@
+# 組員模型審查與AI分層pilot：本輪完成（2026-11-06，Asia/Taipei）
+
+- 起點7a38ef7，Git初始乾淨。第一階段commit caf6894。本輪只新增隔離模型檢查/共同子集runner、分層報表/前端與tests，原SimPy/V1/V2/估計器/RL/Laya等11檔SHA全部未變。
+- backend.rar獨立解至work/ai-comparison/incoming，6來源/weights原始SHA與RAR SHA驗證未變，沒有覆蓋production backend、改寫組員訓練或更新權重。
+- DQN/DDQN皆真正載入7×32-ReLU×3 NPZ（arr0..3），全部finite、不同數值state Q會變化，30 probes各重複20次epsilon0確定且Q argmax=action，測得合法0/1/2。49維直接送入會ValueError。weights不同seed42初始，但無訓練證據；沒有用微秒probe當正式性能。
+- DQN/DDQN FORMAL INTEGRATION: BLOCKED。七維名稱/順序/單位/scaler/訓練資料split/Reward/訓練action mapping/環境/選checkpoint證據缺失；未任取49→7，未建立假Adapter，未宣稱已正確訓練。TEAM_BLOCKERS.md有具體必補資料與golden fixtures。
+- execution snippet實際重現DQN/DDQN .decide AttributeError、threshold缺edge_cpu TypeError。只保留證據與建議，不貼回原execution；CPU百分比threshold未替換既有Load-threshold。
+- 24格10圖pilot全部完成：2資料集×Low/Medium/High×4既有網路；seed11、deadline1000、realistic、complete_all、原80 training Median不重fit。每資料集從凍結100圖固定10張，所有八可用策略同圖/順序/時程/真值/估計器；每策略全新SimPy，沒有拿舊100圖baseline比較。DQN/DDQN每格BLOCKED null性能，48列不填零。
+- 負載參考本固定10圖子集實測平均工作量/Edge speed3，interval=tau/rho，rho0.3/0.9/1.5，僅設計到達時程，未把個別真值給policy。LFW間隔600.28/200.09/120.06ms，WIDER1333.01/444.34/266.60ms；各網路實現節點rho另列，不宣稱全系統同樣負載。
+- 新Laya真實任務選擇480次+預熱2次=預算482，沒有Replay/自動重複/結果cache/fallback；原始audit 482項保存，480任務input/state/raw choice/final choice全一致，truncated0。服務開始前已loaded，純首次模型載入時間未測；一致預熱排除任務統計。實際client任務成本合計868686.4ms+預熱8649.6ms，這是預算會計、不是跨情境總排名。
+- 八策略192run/1920task全完成，240比較列（192 PASS+48 BLOCKED）；每情境獨立表/四合一圖，不混總排名。原始decision trace、逐policy checkpoint、24情境JSON與24圖保存。獨立離線FCFS按post-decision提交時間檢查所有CPU/上下載日曆、時間守恆、實際compute與成本計入通過，max error3.638e-12ms。
+- Laya在本輪固定1000ms期限各格兩版達成率均0%，數值選擇仍有限，不能認證有效數值卸載AI。因DQN契約gate BLOCKED及Laya可靠性限制，不擴大30圖；本輪只作小型即時驗收/對照證據，不冒稱完整DQN正式比較。
+- 新頁 http://localhost:8080/ai-comparison.html 已部署；資料集→負載→網路唯一篩選，五指標、四種圖、10策略狀態、同情境CSV/JSON/PNG匯出。原simulator.html保留功能並新增導覽。
+- 實際測試PASS：原85後端+4pilot契約+2服務mock+9前端資料+59真實headless Edge E2E+63HTTP。涵蓋24篩選/五指標/真正下載讀回/手機overflow/原網站InsightFace detect+verify。desktop/mobile/PNG已實際目視核對。先前CUA瀏覽器連線無法使用，改獨立headless profile，不控制現有使用者分頁。
+- 測試初次pilot腳本少import path，保存原錯誤log後只修測試路徑，4/4通過；雙欄小圖經目視後改成可讀單欄並重跑59 E2E。未放寬標準、未改正式策略或數據。
+- 原始組員6檔/RAR、共同20圖SHA、11受保護檔、先前四份交付包1282個檔SHA全部核對未變；未刪DB、dataset或cache/volume。Docker backend/db/laya healthy、frontend running，只有前端重建。
+- 可執行範圍已完成。未完成且無法代做者：七維/訓練契約與合法DQN/DDQN正式Adapter/公平模型比較；需組員提供文件後另開版本。不可把BLOCKED當PASS，也不能因缺資料猜映射。
+
+## 重現、恢復與交付
+
+profiles/ai-comparison/為durable原始實驗，work/ai-comparison/為檢查/測試logs；outputs/ai-comparison/（本chat工作區）封存全部交付。主報告AI_COMPARISON_REPORT.md逐項回答八問，model_validation.md區分數值probe/未知訓練，TEAM_BLOCKERS.md可轉交組員，RUN_TESTS.md提供指令。
+
+scripts/validate_member_models.py、run_ai_comparison.py、build_ai_comparison.py、publish_ai_results.py、test_ai_comparison.py、test_ai_browser.mjs、verify_ai_http.py、finalize_ai_tests.py為本輪來源。runner嚴格source/plan hash，已完成policy不重跑，部分中斷保留為INTERRUPTED而非混Replay；不要刪checkpoint。frontend/public/ai-comparison/保存immutable分層摘要與PNG，無須再跑模型即可檢視。
+
+```powershell
+docker compose -f compose.yaml -f compose.ai.yaml up -d
+node --test frontend/tests/ai-comparison.test.mjs
+docker compose exec -T backend python -m unittest discover -s tests -v
+docker compose exec -T backend python /app/scripts/test_ai_comparison.py
+node scripts/test_ai_browser.mjs
+python scripts/verify_ai_http.py
+```
+
+/app/scripts若重建後消失，先按RUN_TESTS.md從scripts copy；原始member來源只放/tmp/member-review或隔離work。不要將沒有七維契約的DQN註冊到現有API。完整Git提交與封存HEAD在delivery-manifest.json。
+
+---
+
+# 本輪執行中紀錄（歷史，以上方完成狀態為準）
+
 # AI共同子集比較與組員模型檢查（2026-11-06，進行中）
 
 - 起點7a38ef7，Git乾淨；原SimPy/V1/Estimator/Laya與RL等11檔來源SHA保存work/ai-comparison/protected-baseline.json，禁止覆寫原backend。
