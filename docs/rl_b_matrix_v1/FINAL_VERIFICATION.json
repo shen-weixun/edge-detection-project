@@ -1,0 +1,33 @@
+{
+  "verdict": "PASS",
+  "run_manifest_files": 7605,
+  "models": 6,
+  "checkpoints": 30,
+  "historical_contracts_verified": 56,
+  "source_protected": {
+    "verdict": "PASS",
+    "original_files_rechecked": 330,
+    "git_status_unchanged": true,
+    "original_dqn_ddqn_normalizer_simulator_unchanged": true,
+    "original_project_never_mounted": true,
+    "smoke_zip_sha256": "ac2e17eeab6aa2a393e7a0fb6e2308b34ec37feaf87b081edd759087d36ff184"
+  },
+  "training_dispatches": 57600,
+  "gradient_updates": 57222,
+  "target_synchronizations": 282,
+  "all_checkpoint_sources_and_weights_verified": true,
+  "all_saved_online_and_replay_shapes_verified": true,
+  "all_validation_fingerprints_equal": true,
+  "matched_dqn_ddqn_external_streams_and_exploration": true,
+  "max_reward_error": 2.8421709430404007e-13,
+  "max_time_error_ms": 7.275957614183426e-12,
+  "independent_bootstrap_target_error_max": 0.0,
+  "full_validation_dispatches": 576000,
+  "intermediate_validation_dispatches": 72000,
+  "formal_test": false,
+  "A_training": false,
+  "Ridge": false,
+  "extended14400": false,
+  "additional_control_validation_tasks": 252,
+  "additional_control_gradient_updates": 0
+}

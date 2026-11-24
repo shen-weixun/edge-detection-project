@@ -1,0 +1,67 @@
+{
+  "cells_per_seed_round": 48,
+  "planned_training_episodes": 288,
+  "planned_dispatches": 28800,
+  "planned_dispatches_per_seed": 9600,
+  "unique_training_images": 80,
+  "validation_environments": 10,
+  "validation_cells": 120,
+  "validation_cases": 240,
+  "validation_task_records": 24000,
+  "unseen_parameters": {
+    "unseen_ec_116": {
+      "local": {
+        "speed": 1,
+        "rtt_ms": 0,
+        "bandwidth_mbps": 1000
+      },
+      "edge": {
+        "speed": 3,
+        "rtt_ms": 20,
+        "bandwidth_mbps": 120
+      },
+      "cloud": {
+        "speed": 8,
+        "rtt_ms": 116,
+        "bandwidth_mbps": 55
+      }
+    },
+    "unseen_network_6": {
+      "local": {
+        "speed": 1,
+        "rtt_ms": 0,
+        "bandwidth_mbps": 1000
+      },
+      "edge": {
+        "speed": 3,
+        "rtt_ms": 20,
+        "bandwidth_mbps": 6
+      },
+      "cloud": {
+        "speed": 8,
+        "rtt_ms": 100,
+        "bandwidth_mbps": 6
+      }
+    },
+    "unseen_local_310_390": {
+      "local": {
+        "speed": 1,
+        "rtt_ms": 0,
+        "bandwidth_mbps": 1000
+      },
+      "edge": {
+        "speed": 3,
+        "rtt_ms": 310,
+        "bandwidth_mbps": 120
+      },
+      "cloud": {
+        "speed": 8,
+        "rtt_ms": 390,
+        "bandwidth_mbps": 55
+      }
+    }
+  },
+  "training_manifest_sha256": "e21e58ebdfa1c4c8acbe5899ee112323bc75b258c148bb577fe9f46fd4bf9279",
+  "validation_manifest_sha256": "6b104b1e98d982d0aad7cdca96fd14d5c3d50c3116f56296dab2e19e2ac1e23a",
+  "all_training_execution_authorized": false
+}
