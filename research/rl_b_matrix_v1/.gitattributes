@@ -1,0 +1,2 @@
+# Preserve tested source/profile bytes; CSV SHA must survive checkout on Linux and Windows.
+* -text

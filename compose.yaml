@@ -19,9 +19,11 @@ services:
       DATABASE_URL: ${DATABASE_URL:-postgresql+psycopg://face:${POSTGRES_PASSWORD:-local-face-password}@db:5432/face}
       DATASET_ROOT: ${DATASET_ROOT:-/datasets}
       MODEL_ROOT: ${MODEL_ROOT:-/models}
+      PROFILE_ROOT: /profiles
     volumes:
       - ./data:/datasets:ro
       - insightface_models:/models
+      - ./profiles:/profiles
     depends_on:
       db:
         condition: service_healthy
