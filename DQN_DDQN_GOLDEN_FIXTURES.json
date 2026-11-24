@@ -1,0 +1,720 @@
+{
+  "contract": "simpy49-log1p-v1",
+  "features": [
+    {
+      "index_1_based": 1,
+      "name": "image_size_mb",
+      "scale": 5.0,
+      "binary": false
+    },
+    {
+      "index_1_based": 2,
+      "name": "width",
+      "scale": 1920.0,
+      "binary": false
+    },
+    {
+      "index_1_based": 3,
+      "name": "height",
+      "scale": 1080.0,
+      "binary": false
+    },
+    {
+      "index_1_based": 4,
+      "name": "arrival_ms",
+      "scale": 60000.0,
+      "binary": false
+    },
+    {
+      "index_1_based": 5,
+      "name": "deadline_ms",
+      "scale": 1000.0,
+      "binary": false
+    },
+    {
+      "index_1_based": 6,
+      "name": "estimated_workload_ms",
+      "scale": 1000.0,
+      "binary": false
+    },
+    {
+      "index_1_based": 7,
+      "name": "result_size_kb",
+      "scale": 16.0,
+      "binary": false
+    },
+    {
+      "index_1_based": 8,
+      "name": "local.compute_speed",
+      "scale": 4.0,
+      "binary": false
+    },
+    {
+      "index_1_based": 9,
+      "name": "local.queue_length",
+      "scale": 20.0,
+      "binary": false
+    },
+    {
+      "index_1_based": 10,
+      "name": "local.queue_work_ms",
+      "scale": 5000.0,
+      "binary": false
+    },
+    {
+      "index_1_based": 11,
+      "name": "local.rtt_ms",
+      "scale": 500.0,
+      "binary": false
+    },
+    {
+      "index_1_based": 12,
+      "name": "local.bandwidth_mbps",
+      "scale": 100.0,
+      "binary": false
+    },
+    {
+      "index_1_based": 13,
+      "name": "local.upload_backlog_ms",
+      "scale": 5000.0,
+      "binary": false
+    },
+    {
+      "index_1_based": 14,
+      "name": "local.download_backlog_ms",
+      "scale": 5000.0,
+      "binary": false
+    },
+    {
+      "index_1_based": 15,
+      "name": "local.available",
+      "scale": 1.0,
+      "binary": true
+    },
+    {
+      "index_1_based": 16,
+      "name": "local.cpu_running",
+      "scale": 8.0,
+      "binary": false
+    },
+    {
+      "index_1_based": 17,
+      "name": "local.committed_count",
+      "scale": 20.0,
+      "binary": false
+    },
+    {
+      "index_1_based": 18,
+      "name": "local.transmitting_count",
+      "scale": 20.0,
+      "binary": false
+    },
+    {
+      "index_1_based": 19,
+      "name": "local.returning_count",
+      "scale": 20.0,
+      "binary": false
+    },
+    {
+      "index_1_based": 20,
+      "name": "local.committed_work_ms",
+      "scale": 5000.0,
+      "binary": false
+    },
+    {
+      "index_1_based": 21,
+      "name": "local.observed_at_ms",
+      "scale": 60000.0,
+      "binary": false
+    },
+    {
+      "index_1_based": 22,
+      "name": "edge.compute_speed",
+      "scale": 4.0,
+      "binary": false
+    },
+    {
+      "index_1_based": 23,
+      "name": "edge.queue_length",
+      "scale": 20.0,
+      "binary": false
+    },
+    {
+      "index_1_based": 24,
+      "name": "edge.queue_work_ms",
+      "scale": 5000.0,
+      "binary": false
+    },
+    {
+      "index_1_based": 25,
+      "name": "edge.rtt_ms",
+      "scale": 500.0,
+      "binary": false
+    },
+    {
+      "index_1_based": 26,
+      "name": "edge.bandwidth_mbps",
+      "scale": 100.0,
+      "binary": false
+    },
+    {
+      "index_1_based": 27,
+      "name": "edge.upload_backlog_ms",
+      "scale": 5000.0,
+      "binary": false
+    },
+    {
+      "index_1_based": 28,
+      "name": "edge.download_backlog_ms",
+      "scale": 5000.0,
+      "binary": false
+    },
+    {
+      "index_1_based": 29,
+      "name": "edge.available",
+      "scale": 1.0,
+      "binary": true
+    },
+    {
+      "index_1_based": 30,
+      "name": "edge.cpu_running",
+      "scale": 8.0,
+      "binary": false
+    },
+    {
+      "index_1_based": 31,
+      "name": "edge.committed_count",
+      "scale": 20.0,
+      "binary": false
+    },
+    {
+      "index_1_based": 32,
+      "name": "edge.transmitting_count",
+      "scale": 20.0,
+      "binary": false
+    },
+    {
+      "index_1_based": 33,
+      "name": "edge.returning_count",
+      "scale": 20.0,
+      "binary": false
+    },
+    {
+      "index_1_based": 34,
+      "name": "edge.committed_work_ms",
+      "scale": 5000.0,
+      "binary": false
+    },
+    {
+      "index_1_based": 35,
+      "name": "edge.observed_at_ms",
+      "scale": 60000.0,
+      "binary": false
+    },
+    {
+      "index_1_based": 36,
+      "name": "cloud.compute_speed",
+      "scale": 4.0,
+      "binary": false
+    },
+    {
+      "index_1_based": 37,
+      "name": "cloud.queue_length",
+      "scale": 20.0,
+      "binary": false
+    },
+    {
+      "index_1_based": 38,
+      "name": "cloud.queue_work_ms",
+      "scale": 5000.0,
+      "binary": false
+    },
+    {
+      "index_1_based": 39,
+      "name": "cloud.rtt_ms",
+      "scale": 500.0,
+      "binary": false
+    },
+    {
+      "index_1_based": 40,
+      "name": "cloud.bandwidth_mbps",
+      "scale": 100.0,
+      "binary": false
+    },
+    {
+      "index_1_based": 41,
+      "name": "cloud.upload_backlog_ms",
+      "scale": 5000.0,
+      "binary": false
+    },
+    {
+      "index_1_based": 42,
+      "name": "cloud.download_backlog_ms",
+      "scale": 5000.0,
+      "binary": false
+    },
+    {
+      "index_1_based": 43,
+      "name": "cloud.available",
+      "scale": 1.0,
+      "binary": true
+    },
+    {
+      "index_1_based": 44,
+      "name": "cloud.cpu_running",
+      "scale": 8.0,
+      "binary": false
+    },
+    {
+      "index_1_based": 45,
+      "name": "cloud.committed_count",
+      "scale": 20.0,
+      "binary": false
+    },
+    {
+      "index_1_based": 46,
+      "name": "cloud.transmitting_count",
+      "scale": 20.0,
+      "binary": false
+    },
+    {
+      "index_1_based": 47,
+      "name": "cloud.returning_count",
+      "scale": 20.0,
+      "binary": false
+    },
+    {
+      "index_1_based": 48,
+      "name": "cloud.committed_work_ms",
+      "scale": 5000.0,
+      "binary": false
+    },
+    {
+      "index_1_based": 49,
+      "name": "cloud.observed_at_ms",
+      "scale": 60000.0,
+      "binary": false
+    }
+  ],
+  "fixtures": [
+    {
+      "task": {
+        "task_id": 7,
+        "image_size_mb": 0.23,
+        "width": 641,
+        "height": 479,
+        "arrival_ms": 123,
+        "deadline_ms": 999,
+        "estimated_workload_ms": 321,
+        "result_size_kb": 15
+      },
+      "state": {
+        "local": {
+          "name": "local",
+          "compute_speed": 1.5,
+          "queue_length": 2,
+          "queue_work_ms": 233,
+          "rtt_ms": 35,
+          "bandwidth_mbps": 71,
+          "upload_backlog_ms": 123,
+          "download_backlog_ms": 343,
+          "available": true,
+          "cpu_running": 1,
+          "committed_count": 4,
+          "transmitting_count": 5,
+          "returning_count": 6,
+          "committed_work_ms": 543,
+          "observed_at_ms": 137
+        },
+        "edge": {
+          "name": "edge",
+          "compute_speed": 2.5,
+          "queue_length": 3,
+          "queue_work_ms": 234,
+          "rtt_ms": 36,
+          "bandwidth_mbps": 72,
+          "upload_backlog_ms": 124,
+          "download_backlog_ms": 344,
+          "available": true,
+          "cpu_running": 1,
+          "committed_count": 5,
+          "transmitting_count": 6,
+          "returning_count": 7,
+          "committed_work_ms": 544,
+          "observed_at_ms": 137
+        },
+        "cloud": {
+          "name": "cloud",
+          "compute_speed": 3.5,
+          "queue_length": 4,
+          "queue_work_ms": 235,
+          "rtt_ms": 37,
+          "bandwidth_mbps": 73,
+          "upload_backlog_ms": 125,
+          "download_backlog_ms": 345,
+          "available": true,
+          "cpu_running": 1,
+          "committed_count": 6,
+          "transmitting_count": 7,
+          "returning_count": 8,
+          "committed_work_ms": 545,
+          "observed_at_ms": 137
+        }
+      },
+      "raw_features": [
+        0.23,
+        641.0,
+        479.0,
+        123.0,
+        999.0,
+        321.0,
+        15.0,
+        1.5,
+        2.0,
+        233.0,
+        35.0,
+        71.0,
+        123.0,
+        343.0,
+        1.0,
+        1.0,
+        4.0,
+        5.0,
+        6.0,
+        543.0,
+        137.0,
+        2.5,
+        3.0,
+        234.0,
+        36.0,
+        72.0,
+        124.0,
+        344.0,
+        1.0,
+        1.0,
+        5.0,
+        6.0,
+        7.0,
+        544.0,
+        137.0,
+        3.5,
+        4.0,
+        235.0,
+        37.0,
+        73.0,
+        125.0,
+        345.0,
+        1.0,
+        1.0,
+        6.0,
+        7.0,
+        8.0,
+        545.0,
+        137.0
+      ],
+      "normalized_features": [
+        0.044973365642731154,
+        0.288072621177698,
+        0.3670835489395112,
+        0.0020479016173003107,
+        0.692647055518263,
+        0.2783890255401883,
+        0.661398482245365,
+        0.3184537311185346,
+        0.09531017980432487,
+        0.04554681495597039,
+        0.06765864847381481,
+        0.5364933705145685,
+        0.024302292522964862,
+        0.06634938054153391,
+        1.0,
+        0.11778303565638346,
+        0.18232155679395462,
+        0.22314355131420976,
+        0.26236426446749106,
+        0.10309795800356726,
+        0.0022807304891320776,
+        0.48550781578170077,
+        0.13976194237515868,
+        0.04573789167385374,
+        0.06952606264861023,
+        0.5423242908253616,
+        0.024497471600387438,
+        0.06653652380024423,
+        1.0,
+        0.11778303565638346,
+        0.22314355131420976,
+        0.26236426446749106,
+        0.30010459245033805,
+        0.10327834945350173,
+        0.0022807304891320776,
+        0.6286086594223741,
+        0.18232155679395462,
+        0.045928931888399804,
+        0.07138999608667294,
+        0.5481214085096876,
+        0.0246926125903715,
+        0.06672363204290818,
+        1.0,
+        0.11778303565638346,
+        0.26236426446749106,
+        0.30010459245033805,
+        0.33647223662121295,
+        0.10345870836822998,
+        0.0022807304891320776
+      ],
+      "models": {
+        "dqn_prototype": {
+          "q_values": [
+            -4.017113886661068,
+            -5.434812292663168,
+            -6.557283876553785
+          ],
+          "action": 0,
+          "node": "local",
+          "checkpoint_sha256": "3505677470411f36e6c1997f29907640d71a30c160dfcdc239ae2c1404febd7e"
+        },
+        "dqn_simpy": {
+          "q_values": [
+            -10.332608952724886,
+            -10.278519740009006,
+            -10.417024901012892
+          ],
+          "action": 1,
+          "node": "edge",
+          "checkpoint_sha256": "4ca02e6543ac8bdb5dd25e608eda15ddd5a5726e7f3b716051748143dc4f118c"
+        },
+        "ddqn_prototype": {
+          "q_values": [
+            -3.866077757035719,
+            -5.060059716783707,
+            -6.05726422188517
+          ],
+          "action": 0,
+          "node": "local",
+          "checkpoint_sha256": "30c27526b6b02492b36258c62db9b76e637c9463f619b832affa9b712adabce8"
+        },
+        "ddqn_simpy": {
+          "q_values": [
+            -10.523800450864284,
+            -10.513778688874758,
+            -10.549950863016768
+          ],
+          "action": 1,
+          "node": "edge",
+          "checkpoint_sha256": "4bc95eeaf87f8278541b99c95846275611473159fc7f746d5ebe49ca7242b91e"
+        }
+      }
+    },
+    {
+      "task": {
+        "task_id": 7,
+        "image_size_mb": 0.23,
+        "width": 641,
+        "height": 479,
+        "arrival_ms": 123,
+        "deadline_ms": 999,
+        "estimated_workload_ms": 321,
+        "result_size_kb": 15
+      },
+      "state": {
+        "local": {
+          "name": "local",
+          "compute_speed": 1.5,
+          "queue_length": 2,
+          "queue_work_ms": 233,
+          "rtt_ms": 35,
+          "bandwidth_mbps": 71,
+          "upload_backlog_ms": 123,
+          "download_backlog_ms": 343,
+          "available": false,
+          "cpu_running": 1,
+          "committed_count": 4,
+          "transmitting_count": 5,
+          "returning_count": 6,
+          "committed_work_ms": 543,
+          "observed_at_ms": 137
+        },
+        "edge": {
+          "name": "edge",
+          "compute_speed": 2.5,
+          "queue_length": 3,
+          "queue_work_ms": 234,
+          "rtt_ms": 36,
+          "bandwidth_mbps": 72,
+          "upload_backlog_ms": 124,
+          "download_backlog_ms": 344,
+          "available": true,
+          "cpu_running": 1,
+          "committed_count": 5,
+          "transmitting_count": 6,
+          "returning_count": 7,
+          "committed_work_ms": 544,
+          "observed_at_ms": 137
+        },
+        "cloud": {
+          "name": "cloud",
+          "compute_speed": 3.5,
+          "queue_length": 4,
+          "queue_work_ms": 235,
+          "rtt_ms": 37,
+          "bandwidth_mbps": 73,
+          "upload_backlog_ms": 125,
+          "download_backlog_ms": 345,
+          "available": false,
+          "cpu_running": 1,
+          "committed_count": 6,
+          "transmitting_count": 7,
+          "returning_count": 8,
+          "committed_work_ms": 545,
+          "observed_at_ms": 137
+        }
+      },
+      "raw_features": [
+        0.23,
+        641.0,
+        479.0,
+        123.0,
+        999.0,
+        321.0,
+        15.0,
+        1.5,
+        2.0,
+        233.0,
+        35.0,
+        71.0,
+        123.0,
+        343.0,
+        0.0,
+        1.0,
+        4.0,
+        5.0,
+        6.0,
+        543.0,
+        137.0,
+        2.5,
+        3.0,
+        234.0,
+        36.0,
+        72.0,
+        124.0,
+        344.0,
+        1.0,
+        1.0,
+        5.0,
+        6.0,
+        7.0,
+        544.0,
+        137.0,
+        3.5,
+        4.0,
+        235.0,
+        37.0,
+        73.0,
+        125.0,
+        345.0,
+        0.0,
+        1.0,
+        6.0,
+        7.0,
+        8.0,
+        545.0,
+        137.0
+      ],
+      "normalized_features": [
+        0.044973365642731154,
+        0.288072621177698,
+        0.3670835489395112,
+        0.0020479016173003107,
+        0.692647055518263,
+        0.2783890255401883,
+        0.661398482245365,
+        0.3184537311185346,
+        0.09531017980432487,
+        0.04554681495597039,
+        0.06765864847381481,
+        0.5364933705145685,
+        0.024302292522964862,
+        0.06634938054153391,
+        0.0,
+        0.11778303565638346,
+        0.18232155679395462,
+        0.22314355131420976,
+        0.26236426446749106,
+        0.10309795800356726,
+        0.0022807304891320776,
+        0.48550781578170077,
+        0.13976194237515868,
+        0.04573789167385374,
+        0.06952606264861023,
+        0.5423242908253616,
+        0.024497471600387438,
+        0.06653652380024423,
+        1.0,
+        0.11778303565638346,
+        0.22314355131420976,
+        0.26236426446749106,
+        0.30010459245033805,
+        0.10327834945350173,
+        0.0022807304891320776,
+        0.6286086594223741,
+        0.18232155679395462,
+        0.045928931888399804,
+        0.07138999608667294,
+        0.5481214085096876,
+        0.0246926125903715,
+        0.06672363204290818,
+        0.0,
+        0.11778303565638346,
+        0.26236426446749106,
+        0.30010459245033805,
+        0.33647223662121295,
+        0.10345870836822998,
+        0.0022807304891320776
+      ],
+      "models": {
+        "dqn_prototype": {
+          "q_values": [
+            -3.2526112353478824,
+            -3.9145521100163823,
+            -6.881850795362508
+          ],
+          "action": 1,
+          "node": "edge",
+          "checkpoint_sha256": "3505677470411f36e6c1997f29907640d71a30c160dfcdc239ae2c1404febd7e"
+        },
+        "dqn_simpy": {
+          "q_values": [
+            -8.203628414242761,
+            -7.995828373142495,
+            -8.418757191896258
+          ],
+          "action": 1,
+          "node": "edge",
+          "checkpoint_sha256": "4ca02e6543ac8bdb5dd25e608eda15ddd5a5726e7f3b716051748143dc4f118c"
+        },
+        "ddqn_prototype": {
+          "q_values": [
+            -3.122370223627795,
+            -3.6676030548837373,
+            -6.479202734664914
+          ],
+          "action": 1,
+          "node": "edge",
+          "checkpoint_sha256": "30c27526b6b02492b36258c62db9b76e637c9463f619b832affa9b712adabce8"
+        },
+        "ddqn_simpy": {
+          "q_values": [
+            -8.341847370716565,
+            -8.200283853614224,
+            -8.489265713056412
+          ],
+          "action": 1,
+          "node": "edge",
+          "checkpoint_sha256": "4bc95eeaf87f8278541b99c95846275611473159fc7f746d5ebe49ca7242b91e"
+        }
+      }
+    }
+  ],
+  "oracle": "Independent scalar log1p and dense layer dot products from frozen NPZ tensors"
+}

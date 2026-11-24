@@ -1,5 +1,7 @@
 # DQN／DDQN 組員整合契約（offloading-decision-v1）
 
+> 2026-11-10 更新：新 49 維 DQN／DDQN 已用既有 IndexPolicy/run_policy 進行離線 SimPy 整合；見 DQN_DDQN_SIMPY_ADAPTER.md。以下保留原契約文件；HTTP 策略註冊仍未新增。
+
 本輪沒有修改或訓練 DQN／DDQN；既有 `rl.py`、Task/NodeState、SimPy、Baseline/V1/V2 均保持原檔雜湊。新增 `integration_contract.py` 是獨立轉接工具，不是已訓練策略。真實 DQN／DDQN 權重、特徵正規化與推論耗時尚未提供，實際模型整合為 **NOT VERIFIED**。
 
 ## 三種入口與相容範圍

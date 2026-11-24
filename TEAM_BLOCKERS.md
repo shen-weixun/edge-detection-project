@@ -1,5 +1,7 @@
 # 組員待補資料與正式整合阻擋
 
+> 2026-11-10：本頁的 BLOCKED 專指原七維權重。新 49 維是獨立版本，原型及正式 SimPy 證據請見 DQN_DDQN_49D_AUDIT.md、DQN_DDQN_TRAINING_REPORT.md 與 AI_10_STRATEGY_COMPARISON.md。
+
 **DQN/DDQN FORMAL INTEGRATION: BLOCKED**
 
 目前只可證明權重可執行，不能證明它對應這套SimPy或凍結test。請組員提供下列可驗證資料，不能用七個示範數字或權重形狀替代。

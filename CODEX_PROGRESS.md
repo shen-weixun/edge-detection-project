@@ -1,3 +1,71 @@
+# B矩陣候選訓練與GitHub交付（2026-11-24）
+
+- P0來源可攜性、130項前置回歸及48-cell無梯度預檢通過。B六模型固定各9600派送，總57600；各9537更新、47次Target同步，五Checkpoint及完整共同Validation均保留。
+- 完整Validation分層結果與限制見 docs/rl_b_matrix_v1/B_CANDIDATE_REVIEW_ZH_TW.md。仍有固定Cloud、上傳背壓與Local回選限制；未宣稱收斂或正式Test驗收。
+- 新版獨立工具在research/rl_b_matrix_v1，不接入API/前端。原A矩陣訓練、Ridge、14400延長及正式Test未執行。所有Seed與失敗結果保留。
+- 模型及完整原始紀錄由獨立Release附件保存，保持來源/契約相對結構，不將大型證據或模型快取加入普通Git。
+
+---
+
+# 長期 RL 目標與 RNG 驗收（2026-11-21）
+
+- 舊rl-method-review.zip的79個SHA全部驗證。確認act(epsilon=0)消耗Agent RNG以及舊驗證使用live模型的問題。已修正greedy RNG分支，新增獨立evaluation_snapshot，修正rl_method_study評估入口。保留舊程式於work/rl-long-horizon與封存ZIP。
+- 新增integral_env.py：只用已到達未終止任務數計時間積分，完成時每任務只結算一次miss，gamma1有限回合。原simulator.py／rl.py／models.py／integration_contract.py及baseline未修改。
+- 99項回歸PASS；含插入／不插入Validation訓練權重和RNG精確一致、亂序／同時完成、排空、時距、無前視、native next observation、非零DQN/DDQN target差異。
+- 預先固定800 dispatch／737 updates，3 seeds、algorithm×reward×20/100×full/pruned共48模型、38400派送。20回合由相同100任務基礎流切段。4608模型驗證及64baseline；只用training/validation。
+- 全訓練回合獨立成本核算最大誤差1.397e-9。24對DQN/DDQN最終權重皆不同。每個seed曲線／延遲／P95／Deadline／比例／Q都保存profiles/rl-long-horizon-v1。
+- 研究限制：49維仍部分可觀測，沒有Markov充分性證明。訓練種子不穩定，積分Reward在多數配對退步；依要求停止正式Test，無新Test結果。
+- 文件RL_RNG_ISOLATION_TEST.md、RL_LONG_HORIZON_OBJECTIVE.md、RL_REWARD_TIMING_TESTS.md、RL_DQN_DDQN_COMPARISON.md、RL_TRAINING_DIAGNOSTICS.md；原始資料PER_SEED.md及all-seeds CSV。重現用新輸出路徑執行rl_long_horizon_study.py，再執行report與validation_audit腳本。此輪無commit。
+
+---
+
+# RL 方法與信用分配審查（2026-11-21）
+
+- 原始整合／時間計算驗收仍有效，但原task_id對帳只證明完成數量，不能證明task-level credit。此輪確認舊train_episode是global event reward。seed42 DQN同任務41.458%、最後成本55.838%；DDQN42.396%／56.511%。新RL_REWARD_AUDIT.md釐清宣稱。
+- 新增獨立task_credit.py，原state/action按task_id等待完成，gamma0、task-terminal；屬contextual bandit成本回歸，DQN/DDQN更新等同，不宣稱長期RL。亂序／同時完成、drain與梯度等價測試通過；全後端91項。
+- 12個訓練原型、3 seeds、四組對照各2400 dispatch，共28800。只讀training/validation workload profiles、無新正式Test。100任務回合使用既有訓練圖有放回取樣；validation20圖亦有放回。
+- 4608驗證執行、19欄消融、兩舊模型Q敏感度與時鐘平移probe、loss/reward曲線完整保存profiles/rl-method-v1。消融沒有穩定優勢、無收斂認證，不能據此開新Test或宣稱RL勝出。
+- 論文原文LEAOT／TriSchedRL／AICDQN已讀。Muslim2021出版社全文受限／PDF403，方法細節NOT VERIFIED。
+- 參閱RL_REWARD_AUDIT.md、RL_STATE_ABLATION.md、RL_PAPER_COMPARISON.md、RL_TRAINING_REDESIGN.md。腳本scripts/rl_method_study.py拒絕既有輸出路徑；複製到backend容器後用新profiles路徑重現。
+- Docker起始未運作，已啟動並恢復既有AI Compose設定；原模擬核心及Baseline未改，歷史權重／結果不覆寫。此輪未commit。
+
+---
+
+# 49 維模型最終驗收與擴充（2026-11-14，Asia/Taipei）
+
+- 基準 b28aeec，沿用已有工作樹；本輪無 Git commit。原 ZIP 的 1,043 份成員逐項比對。新版 profiles/agents49-final/study.json 區分原執行、獨立修正驗證、修正版 runner 與各 checkpoint；同目錄 selected-checkpoints.json 採修正分數。
+- 88 後端測試、Golden、模型 SHA、split、歷史 Pilot/Formal 稽核通過。同 Docker 重現 6 份 checkpoint、6 份轉移日誌 SHA 及 288 次驗證；只排除驗證的 wall-clock 診斷欄。
+- 擴充 PASS：LFW/WIDER 各 100 張，固定 211／307／401 三種任務順序；72 組配對、576 策略執行、57,600 筆任務。負載由 training profile 固定，design.json 保留實際 offered load。
+- Laya 子集 PASS：48 組配對、480 策略執行、2,400 筆任務，480 筆封存真實決策、0 新呼叫，八種對照在相同歷史時程重跑。
+- 獨立 FCFS／時間守恆最大誤差 5.821e-11／1.819e-12 ms。已保存逐 seed CSV／JSON、48 張圖、資料與雜湊。報表首次因迭代欄名出錯，修正後重跑稽核，raw 結果維持原樣。
+- 重現入口 DQN_DDQN_REPRODUCIBILITY.md；本輪只使用離線實驗，原本核心與 Baseline 保留。歷史資料仍在原位置。
+
+---
+
+# DQN／DDQN 新 49 維驗收（2026-11-10，Asia/Taipei）
+
+- 基準 b28aeec，開始時 CODEX_PROGRESS.md 已有修改，保留原記錄。新增 agents49 模組、三項後端測試和實驗／封存腳本；原 rl.py、OffloadingEnv、EpisodeSplit、SimPy、Laya／Baseline 與原模型無修改。
+- 原 ZIP 已隔離、5/5 測試、兩模型載入及 4,000 步重現；原型 queue_work 觀測可提前洩漏未完成真值。新正式流程沿用原演算法與正規化，使用 OffloadingEnv 的原生事件及 task_id 完成帳目。88/88 後端測試通過。
+- 六個獨立 checkpoint 各 3,840 步、3,777 更新。初版選模時程引用 Pilot aggregate；已改用訓練集時程重算，DQN、DDQN 的最終權重 SHA 均未改變。訓練／選模／最終測試影像相互隔離。
+- Pilot PASS：24×10 策略、2,400 任務。已核對 CPU／網路 FCFS、匹配輸入、有限 Q／動作與 480 筆既有 Laya 稽核（完整舊執行，非 replay，零新呼叫）。舊七維仍 BLOCKED。
+- 正式 PASS：seed 23/37、48 組配對條件、480 策略執行、2,400 任務。各情境／種子共用 5 張凍結測試圖，排除 Pilot 圖；480 次新的 Laya 決策，無 fallback、replay、截斷。獨立 FCFS 與時間守恆的最大誤差均 1.819e-12 ms。保留 48 張分層圖及逐種子 CSV／JSON。
+- 修正版 runner 在獨立輸出完整重訓；6 份 checkpoint 與 6 份 transitions.jsonl 的 SHA-256 分別與原訓練完全一致，驗證分數重現。原七維與新 49 維原型都不列入正式性能比較。
+- 可續跑：先讀 AI_10_STRATEGY_COMPARISON.md 的重現指令；宿主 profiles/agents49、容器 /profiles/agents49 是本輪證據。離線校驗不發模型呼叫；新正式重跑須另選輸出，不刪 .started.json 強制重試。原前端與 API 策略表未更新。五份歷史交付全部 SHA 通過。此輪未建立 Git commit。
+
+---
+# DQN／DDQN 正式整合複查（2026-11-10，Asia/Taipei）
+
+Phase 1 維持 **BLOCKED**。本機專案與工作區、GitHub 遠端四個分支，以及原始 `backend.rar` 均已核對。遠端分支指向本機已有的提交。下載目錄的 RAR 與上一輪封存 SHA-256 一致，內含 DQN／DDQN 類別與權重，但缺少原訓練 State builder、七欄名稱／順序／單位、scaler、Reward 與訓練 Action mapping。訓練資料分割、訓練紀錄和對應權重的 Golden fixtures 也待提供。程式接收外部 reward，CLI 顯示的節點順序無法驗證訓練時使用的 mapping。待補資料與範例規格見 `TEAM_BLOCKERS.md`。
+
+正式入口在決策資源取得後擷取 `SystemState`，再以 `DecisionTask` 和 `SystemState` 呼叫 `select_node`。現有 `IndexPolicy` 提供 49 維可觀測向量。待取得訓練契約後，須逐欄確認七維特徵能否從這個時點取得，並用原權重核對正規化結果、Q-value、Action 與耗時，才可開啟 Phase 2。Phase 2–4 目前待解鎖，Phase 5 只完成既有證據複查。
+
+- 既有試跑有八種策略，涵蓋 24 個情境、每組固定 10 圖、seed 11、Deadline 1,000 ms。各情境的八份原始執行使用相同工作量。192 筆執行摘要有數據，48 筆 DQN／DDQN 列維持 BLOCKED 且指標留空。
+- 封存清單的 2,264 個 SHA-256 全數相符。24 份情境 JSON、24 張圖和 1,920 筆任務紀錄齊全。每筆任務的模擬延遲均符合決策、等待、網路與 CPU 階段加總。
+- 480 筆 Laya 任務決策逐筆連回不同的原始稽核 ID，決策輸入及選擇一致，另有 2 筆預熱。決策耗時沿用當次實測，網路、CPU、排隊及端到端結果由 SimPy 計算。本次 Laya 新增呼叫為 0。
+- 後端 85 項回歸測試通過。DQN／DDQN 目前只有上一輪原始權重的獨立數值推論證據。完整十策略共同驗收與多種子正式比較仍待契約及 Golden fixtures 通過後進行。
+
+---
+
 # 組員模型審查與AI分層pilot：本輪完成（2026-11-06，Asia/Taipei）
 
 - 起點7a38ef7，Git初始乾淨。第一階段commit caf6894；完整分層pilot/前端與測試commit 19d6501。本輪只新增隔離模型檢查/共同子集runner、分層報表/前端與tests，原SimPy/V1/V2/估計器/RL/Laya等11檔SHA全部未變。

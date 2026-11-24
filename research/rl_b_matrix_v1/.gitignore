@@ -1,0 +1,11 @@
+# Keep only small calibration CSV/JSON; root dataset/data remains ignored.
+!data/
+data/*
+!data/*.csv
+!data/*.json
+results/
+candidate-results/
+*.zip
+EXECUTION_RESERVED.json
+progress.log
+__pycache__/
